@@ -22,6 +22,7 @@ Or install it yourself as:
 ## Usage
 
 Use the Builder DSL to produce an AST representation of your query, and use the CSDL::Processor to turn your AST into a raw CSDL string.
+Valid builder methods are `closure`, `filter`, `_and`, `_or`, and `_not`. The last three are prefixed to avoid keyword collision.
 
 ```ruby
 builder = ::CSDL::Builder.new._or do
