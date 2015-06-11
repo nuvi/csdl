@@ -16,7 +16,7 @@ module CSDL
       __multi(:and, &block)
     end
 
-    def _not(target, operator, argument)
+    def _not(target, operator, argument = nil)
       node = filter(target, operator, argument)
       node.updated(:not)
     end
