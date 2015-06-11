@@ -3,6 +3,8 @@
 CSDL is a gem for producing Abstract Syntax Trees for the [DataSift CSDL Filter Language](http://dev.datasift.com/docs/csdl).
 Working with an AST instead of raw strings provides a simpler way to test and validate any given CSDL filter.
 
+[![Build Status](https://travis-ci.org/localshred/csdl.svg)](https://travis-ci.org/localshred/csdl)
+
 ## Installation
 
 Add this line to your application's Gemfile:
