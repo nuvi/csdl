@@ -62,7 +62,7 @@ class ProcessorTest < ::MiniTest::Test
   end
 
   def test_unary_or
-    assert_raises(::CSDL::ASTError) do
+    assert_raises(::CSDL::MissingChildNodesError) do
       sexp = s(:or,
                s(:string, "foo"))
       ::CSDL::Processor.new.process(sexp)

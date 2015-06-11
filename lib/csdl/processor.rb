@@ -2,10 +2,7 @@ require "ast"
 include ::AST::Sexp
 
 module CSDL
-  class ASTError < ::StandardError; end
-
   class Processor < ::AST::Processor
-
 
     def on_and(node)
       initial = process(node.children.first)
@@ -35,14 +32,14 @@ module CSDL
 
     def on_or(node)
       if node.children.empty?
-        fail CSDL::ASTError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got 0"
+        fail CSDL::MissingChildNodesError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got 0"
       end
 
       initial = process(node.children.first)
       rest = node.children.drop(1)
 
       if rest.empty?
-        fail CSDL::ASTError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got #{node.children.size}"
+        fail CSDL::MissingChildNodesError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got #{node.children.size}"
       end
 
       rest.reduce(initial) do |csdl, child|
@@ -56,7 +53,9 @@ module CSDL
     end
 
     def on_target(node)
-      node.children.first.to_s
+      target = node.children.first.to_s
+      validate_target!(target)
+      target
     end
 
     def on_filter(node)
@@ -64,6 +63,11 @@ module CSDL
       operator = node.children.find { |child| child.type == :operator }
       argument = node.children.find { |child| child.type == :argument }
       process_all([ target, operator, argument ].compact).join(" ")
+    end
+
+    def validate_target!(target_key)
+      # no-op, see inherited classes for overrides
+      true
     end
 
   end
