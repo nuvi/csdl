@@ -40,10 +40,10 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_matches(expected, sexp)
   end
 
-  def test_closure_with_where
+  def test_closure_with_filter
     expected = %q{(foo bar "baz")}
     sexp = s(:closure,
-             s(:where,
+             s(:filter,
                s(:target, "foo"),
                s(:operator, "bar"),
                s(:argument,
@@ -98,9 +98,9 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_matches(expected, sexp)
   end
 
-  def test_where
+  def test_filter
     expected = %q{foo bar "baz"}
-    sexp = s(:where,
+    sexp = s(:filter,
              s(:target, "foo"),
              s(:operator, "bar"),
              s(:argument,
@@ -114,14 +114,14 @@ class ProcessorTest < ::MiniTest::Test
       s(:and,
         s(:closure,
           s(:or,
-            s(:where,
+            s(:filter,
               s(:target, "fb.content"),
               s(:operator, :contains_any),
               s(:argument,
                 s(:string, "foo")
                )
              ),
-             s(:where,
+             s(:filter,
                s(:target, "fb.parent.content"),
                s(:operator, :contains_any),
                s(:argument,
@@ -132,14 +132,14 @@ class ProcessorTest < ::MiniTest::Test
          ),
          s(:closure,
            s(:or,
-             s(:where,
+             s(:filter,
                s(:target, "fb.content"),
                s(:operator, :contains_any),
                s(:argument,
                  s(:string, "bar")
                 )
               ),
-              s(:where,
+              s(:filter,
                 s(:target, "fb.parent.content"),
                 s(:operator, :contains_any),
                 s(:argument,

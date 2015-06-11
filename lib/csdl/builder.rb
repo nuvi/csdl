@@ -17,11 +17,11 @@ module CSDL
     end
 
     def _not(target, operator, argument)
-      node = where(target, operator, argument)
+      node = filter(target, operator, argument)
       node.updated(:not)
     end
 
-    def where(target, operator, argument = nil)
+    def filter(target, operator, argument = nil)
       target_node = s(:target, target)
       operator_node = s(:operator, operator)
       argument_node = nil
@@ -32,7 +32,7 @@ module CSDL
         argument_node = s(:argument, child_argument_node)
       end
 
-      s(:where, *[target_node, operator_node, argument_node].compact)
+      s(:filter, *[target_node, operator_node, argument_node].compact)
     end
 
     def __multi(type, &block)

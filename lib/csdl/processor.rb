@@ -26,7 +26,7 @@ module CSDL
     end
 
     def on_not(node)
-      "NOT " + process(node.updated(:where))
+      "NOT " + process(node.updated(:filter))
     end
 
     def on_operator(node)
@@ -59,7 +59,7 @@ module CSDL
       node.children.first.to_s
     end
 
-    def on_where(node)
+    def on_filter(node)
       target = node.children.find { |child| child.type == :target }
       operator = node.children.find { |child| child.type == :operator }
       argument = node.children.find { |child| child.type == :argument }

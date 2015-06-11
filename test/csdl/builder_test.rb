@@ -11,14 +11,14 @@ class BuilderTest < ::MiniTest::Test
 
   def test_closure_1_child
     expected = s(:closure,
-                 s(:where,
+                 s(:filter,
                   s(:target, "foo"),
                   s(:operator, "bar"),
                   s(:argument,
                     s(:string, "baz"))))
 
     actual = ::CSDL::Builder.new.closure do
-      where("foo", "bar", "baz")
+      filter("foo", "bar", "baz")
     end
 
     assert_equal(expected, actual)
@@ -26,12 +26,12 @@ class BuilderTest < ::MiniTest::Test
 
   def test_closure_2_children
     expected = s(:closure,
-                 s(:where,
+                 s(:filter,
                   s(:target, "this"),
                   s(:operator, "is"),
                   s(:argument,
                     s(:string, "first"))),
-                 s(:where,
+                 s(:filter,
                   s(:target, "this"),
                   s(:operator, "is"),
                   s(:argument,
@@ -39,8 +39,8 @@ class BuilderTest < ::MiniTest::Test
 
     actual = ::CSDL::Builder.new.closure do
       [
-        where("this", "is", "first"),
-        where("this", "is", "second")
+        filter("this", "is", "first"),
+        filter("this", "is", "second")
       ]
     end
 
@@ -55,14 +55,14 @@ class BuilderTest < ::MiniTest::Test
 
   def test_or_1_child
     expected = s(:or,
-                 s(:where,
+                 s(:filter,
                   s(:target, "foo"),
                   s(:operator, "bar"),
                   s(:argument,
                     s(:string, "baz"))))
 
     actual = ::CSDL::Builder.new._or do
-      where("foo", "bar", "baz")
+      filter("foo", "bar", "baz")
     end
 
     assert_equal(expected, actual)
@@ -70,12 +70,12 @@ class BuilderTest < ::MiniTest::Test
 
   def test_or_2_children
     expected = s(:or,
-                 s(:where,
+                 s(:filter,
                   s(:target, "this"),
                   s(:operator, "is"),
                   s(:argument,
                     s(:string, "first"))),
-                 s(:where,
+                 s(:filter,
                   s(:target, "this"),
                   s(:operator, "is"),
                   s(:argument,
@@ -83,8 +83,8 @@ class BuilderTest < ::MiniTest::Test
 
     actual = ::CSDL::Builder.new._or do
       [
-        where("this", "is", "first"),
-        where("this", "is", "second")
+        filter("this", "is", "first"),
+        filter("this", "is", "second")
       ]
     end
 
@@ -99,14 +99,14 @@ class BuilderTest < ::MiniTest::Test
 
   def test_and_1_child
     expected = s(:and,
-                 s(:where,
+                 s(:filter,
                   s(:target, "foo"),
                   s(:operator, "bar"),
                   s(:argument,
                     s(:string, "baz"))))
 
     actual = ::CSDL::Builder.new._and do
-      where("foo", "bar", "baz")
+      filter("foo", "bar", "baz")
     end
 
     assert_equal(expected, actual)
@@ -114,12 +114,12 @@ class BuilderTest < ::MiniTest::Test
 
   def test_and_2_children
     expected = s(:and,
-                 s(:where,
+                 s(:filter,
                   s(:target, "this"),
                   s(:operator, "is"),
                   s(:argument,
                     s(:string, "first"))),
-                 s(:where,
+                 s(:filter,
                   s(:target, "this"),
                   s(:operator, "is"),
                   s(:argument,
@@ -127,32 +127,32 @@ class BuilderTest < ::MiniTest::Test
 
     actual = ::CSDL::Builder.new._and do
       [
-        where("this", "is", "first"),
-        where("this", "is", "second")
+        filter("this", "is", "first"),
+        filter("this", "is", "second")
       ]
     end
 
     assert_equal(expected, actual)
   end
 
-  def test_where_with_argument
-    expected = s(:where,
+  def test_filter_with_argument
+    expected = s(:filter,
                  s(:target, "this"),
                  s(:operator, "is"),
                  s(:argument,
                    s(:string, "an argument")))
 
-    actual = ::CSDL::Builder.new.where("this", "is", "an argument")
+    actual = ::CSDL::Builder.new.filter("this", "is", "an argument")
 
     assert_equal(expected, actual)
   end
 
-  def test_where_without_argument
-    expected = s(:where,
+  def test_filter_without_argument
+    expected = s(:filter,
                  s(:target, "foo"),
                  s(:operator, "bar"))
 
-    actual = ::CSDL::Builder.new.where("foo", "bar")
+    actual = ::CSDL::Builder.new.filter("foo", "bar")
 
     assert_equal(expected, actual)
   end
@@ -165,13 +165,13 @@ class BuilderTest < ::MiniTest::Test
 #           closure {
 #             _or {
 #               [
-#                 where("fb.content", :contains_any, "ebola"),
-#                 where("fb.parent.content", :contains_any, "ebola")
+#                 filter("fb.content", :contains_any, "ebola"),
+#                 filter("fb.parent.content", :contains_any, "ebola")
 #               ]
 #             }
 #           },
 #           _not("fb.content", :contains_any, "government,politics"),
-#           where("fb.author.country_code", :in, "GB")
+#           filter("fb.author.country_code", :in, "GB")
 #         ]
 #       }
 #     },
@@ -181,8 +181,8 @@ class BuilderTest < ::MiniTest::Test
 #           closure {
 #             _or {
 #               [
-#                 where("fb.content", :contains_any, "malta,malta island,#malta"),
-#                 where("fb.parent.content", :contains_any, "malta,malta island,#malta")
+#                 filter("fb.content", :contains_any, "malta,malta island,#malta"),
+#                 filter("fb.parent.content", :contains_any, "malta,malta island,#malta")
 #               ]
 #             }
 #           },
