@@ -1,15 +1,14 @@
-# Csdl
+# CSDL
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/csdl`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+CSDL is a gem for producing Abstract Syntax Trees for the [DataSift CSDL Filter Language](http://dev.datasift.com/docs/csdl).
+Working with an AST instead of raw strings provides a simpler way to test and validate any given CSDL filter.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'csdl'
+gem "csdl"
 ```
 
 And then execute:
@@ -22,15 +21,129 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Use the Builder DSL to produce an AST representation of your query, and use the CSDL::Processor to turn your AST into a raw CSDL string.
 
-## Development
+```ruby
+builder = ::CSDL::Builder.new._or do
+  [
+    closure {
+      _and {
+        [
+          closure {
+            _or {
+              [
+                filter("fb.content", :contains_any, "ebola"),
+                filter("fb.parent.content", :contains_any, "ebola")
+              ]
+            }
+          },
+          _not("fb.content", :contains_any, "government,politics"),
+          filter("fb.author.country_code", :in, "GB")
+        ]
+      }
+    },
+    closure {
+      _and {
+        [
+          closure {
+            _or {
+              [
+                filter("fb.content", :contains_any, "malta,malta island,#malta"),
+                filter("fb.parent.content", :contains_any, "malta,malta island,#malta")
+              ]
+            }
+          },
+          _not("fb.content", :contains_any, "vacation,poker awards")
+        ]
+      }
+    }
+  ]
+end
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+puts
+puts "Builder..."
+puts builder.to_sexp
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+puts
+puts "Processing AST..."
+puts ::CSDL::Processor.new.process(builder)
+```
+
+The previous script produces the following output:
+
+```
+Builder...
+(or
+  (closure
+    (and
+      (closure
+        (or
+          (filter
+            (target "fb.content")
+            (operator :contains_any)
+            (argument
+              (string "ebola")))
+          (filter
+            (target "fb.parent.content")
+            (operator :contains_any)
+            (argument
+              (string "ebola")))))
+      (not
+        (target "fb.content")
+        (operator :contains_any)
+        (argument
+          (string "government,politics")))
+      (filter
+        (target "fb.author.country_code")
+        (operator :in)
+        (argument
+          (string "GB")))))
+  (closure
+    (and
+      (closure
+        (or
+          (filter
+            (target "fb.content")
+            (operator :contains_any)
+            (argument
+              (string "malta,malta island,#malta")))
+          (filter
+            (target "fb.parent.content")
+            (operator :contains_any)
+            (argument
+              (string "malta,malta island,#malta")))))
+      (not
+        (target "fb.content")
+        (operator :contains_any)
+        (argument
+          (string "vacation,poker awards"))))))
+
+Processing AST...
+((fb.content contains_any "ebola" OR fb.parent.content contains_any "ebola") AND NOT fb.content contains_any "government,politics" AND fb.author.country_code in "GB") OR ((fb.content contains_any "malta,malta island,#malta" OR fb.parent.content contains_any "malta,malta island,#malta") AND NOT fb.content contains_any "vacation,poker awards")
+```
+
+The processed AST looks like this (manually expanded):
+
+```
+(
+  (
+    fb.content contains_any "ebola"
+    OR fb.parent.content contains_any "ebola"
+  )
+  AND NOT fb.content contains_any "government,politics"
+  AND fb.author.country_code in "GB"
+)
+OR
+(
+  (
+    fb.content contains_any "malta,malta island,#malta"
+    OR fb.parent.content contains_any "malta,malta island,#malta"
+  )
+  AND NOT fb.content contains_any "vacation,poker awards"
+)
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/csdl.
+Bug reports and pull requests are welcome on GitHub at [https://github.com/localshred/csdl](https://github.com/localshred/csdl).
 

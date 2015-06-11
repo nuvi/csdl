@@ -179,48 +179,4 @@ class BuilderTest < ::MiniTest::Test
     assert_equal(expected, actual)
   end
 
-# builder = CSDLBuilder.new._or do
-#   [
-#     closure {
-#       _and {
-#         [
-#           closure {
-#             _or {
-#               [
-#                 filter("fb.content", :contains_any, "ebola"),
-#                 filter("fb.parent.content", :contains_any, "ebola")
-#               ]
-#             }
-#           },
-#           _not("fb.content", :contains_any, "government,politics"),
-#           filter("fb.author.country_code", :in, "GB")
-#         ]
-#       }
-#     },
-#     closure {
-#       _and {
-#         [
-#           closure {
-#             _or {
-#               [
-#                 filter("fb.content", :contains_any, "malta,malta island,#malta"),
-#                 filter("fb.parent.content", :contains_any, "malta,malta island,#malta")
-#               ]
-#             }
-#           },
-#           _not("fb.content", :contains_any, "vacation,suicide,poker awards")
-#         ]
-#       }
-#     }
-#   ]
-# end
-#
-# puts
-# puts "Builder sexp..."
-# puts builder.to_sexp
-#
-# puts
-# puts "processing built sexp..."
-# puts CSDL.new.process(builder)
-
 end
