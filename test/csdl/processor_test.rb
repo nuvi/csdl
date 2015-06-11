@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ProcessorTest < ::MiniTest::Unit::TestCase
+class ProcessorTest < ::MiniTest::Test
 
   def test_binary_and
     expected = %q{"foo" AND "bar"}
@@ -59,6 +59,14 @@ class ProcessorTest < ::MiniTest::Unit::TestCase
              s(:argument,
                s(:string, "baz")))
     assert_csdl_matches(expected, sexp)
+  end
+
+  def test_unary_or
+    assert_raises(::CSDL::ASTError) do
+      sexp = s(:or,
+               s(:string, "foo"))
+      ::CSDL::Processor.new.process(sexp)
+    end
   end
 
   def test_binary_or

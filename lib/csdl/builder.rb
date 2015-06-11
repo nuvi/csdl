@@ -21,7 +21,7 @@ module CSDL
       node.updated(:not)
     end
 
-    def where(target, operator, argument)
+    def where(target, operator, argument = nil)
       target_node = s(:target, target)
       operator_node = s(:operator, operator)
       argument_node = nil
@@ -38,7 +38,12 @@ module CSDL
     def __multi(type, &block)
       children = instance_eval(&block)
       children = [ children ].flatten
-      s(type, *children)
+
+      if children.empty?
+        s(type)
+      else
+        s(type, *children)
+      end
     end
 
   end

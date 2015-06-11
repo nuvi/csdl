@@ -2,7 +2,10 @@ require "ast"
 include ::AST::Sexp
 
 module CSDL
+  class ASTError < ::StandardError; end
+
   class Processor < ::AST::Processor
+
 
     def on_and(node)
       initial = process(node.children.first)
@@ -31,8 +34,16 @@ module CSDL
     end
 
     def on_or(node)
+      if node.children.empty?
+        fail CSDL::ASTError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got 0"
+      end
+
       initial = process(node.children.first)
       rest = node.children.drop(1)
+
+      if rest.empty?
+        fail CSDL::ASTError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got #{node.children.size}"
+      end
 
       rest.reduce(initial) do |csdl, child|
         csdl += " OR " + process(child)
