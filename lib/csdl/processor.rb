@@ -66,8 +66,9 @@ module CSDL
     end
 
     def validate_target!(target_key)
-      # no-op, see inherited classes for overrides
-      true
+      unless ::CSDL.target?(target_key)
+        fail ::CSDL::InvalidQueryTargetError, "Query filters cannot use target '#{target_key}'"
+      end
     end
 
   end

@@ -76,6 +76,10 @@ module CSDL
   ANALYSIS_TARGETS    = TARGETS.select { |_, target| target.analysis? }
   QUERY_TARGETS       = TARGETS.select { |_, target| target.query? }
 
+  def self.target?(target_name)
+    TARGETS.key?(target_name)
+  end
+
   def self.interaction_target?(target_name)
     INTERACTION_TARGETS.key?(target_name)
   end

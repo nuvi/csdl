@@ -41,10 +41,11 @@ class ProcessorTest < ::MiniTest::Test
   end
 
   def test_closure_with_filter
-    expected = %q{(foo bar "baz")}
+    target = ::CSDL::TARGETS.keys.sample
+    expected = %Q{(#{target} bar "baz")}
     sexp = s(:closure,
              s(:filter,
-               s(:target, "foo"),
+               s(:target, target),
                s(:operator, "bar"),
                s(:argument,
                  s(:string, "baz"))))
@@ -52,9 +53,10 @@ class ProcessorTest < ::MiniTest::Test
   end
 
   def test_not
-    expected = %q{NOT foo bar "baz"}
+    target = ::CSDL::TARGETS.keys.sample
+    expected = %Q{NOT #{target} bar "baz"}
     sexp = s(:not,
-             s(:target, "foo"),
+             s(:target, target),
              s(:operator, "bar"),
              s(:argument,
                s(:string, "baz")))
@@ -93,15 +95,16 @@ class ProcessorTest < ::MiniTest::Test
   end
 
   def test_target
-    expected = "123"
-    sexp = s(:target, 123)
-    assert_csdl_matches(expected, sexp)
+    target = ::CSDL::TARGETS.keys.sample
+    sexp = s(:target, target)
+    assert_csdl_matches(target, sexp)
   end
 
   def test_filter
-    expected = %q{foo bar "baz"}
+    target = ::CSDL::TARGETS.keys.sample
+    expected = %Q{#{target} bar "baz"}
     sexp = s(:filter,
-             s(:target, "foo"),
+             s(:target, target),
              s(:operator, "bar"),
              s(:argument,
                s(:string, "baz")))
