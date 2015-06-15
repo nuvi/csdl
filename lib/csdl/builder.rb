@@ -1,5 +1,3 @@
-require "ast"
-
 module CSDL
   class Builder
     include ::AST::Sexp

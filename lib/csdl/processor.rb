@@ -1,6 +1,3 @@
-require "ast"
-include ::AST::Sexp
-
 module CSDL
   class Processor < ::AST::Processor
 
