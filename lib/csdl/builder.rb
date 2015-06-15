@@ -33,6 +33,10 @@ module CSDL
       __multi(:logical_group, &block)
     end
 
+    def statement_scope(&block)
+      __multi(:statement_scope, &block)
+    end
+
     def __multi(type, &block)
       children = instance_eval(&block)
       children = [ children ].flatten

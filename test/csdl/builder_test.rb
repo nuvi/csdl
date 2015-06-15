@@ -3,6 +3,50 @@ require "test_helper"
 class BuilderTest < ::MiniTest::Test
   include ::AST::Sexp
 
+  def test_statement_scope_0_children
+    expected = s(:statement_scope, nil)
+    actual = ::CSDL::Builder.new.statement_scope {}
+    assert_equal(expected, actual)
+  end
+
+  def test_statement_scope_1_child
+    expected = s(:statement_scope,
+                 s(:filter,
+                  s(:target, "foo"),
+                  s(:operator, "bar"),
+                  s(:argument,
+                    s(:string, "baz"))))
+
+    actual = ::CSDL::Builder.new.statement_scope do
+      filter("foo", "bar", "baz")
+    end
+
+    assert_equal(expected, actual)
+  end
+
+  def test_statement_scope_2_children
+    expected = s(:statement_scope,
+                 s(:filter,
+                  s(:target, "this"),
+                  s(:operator, "is"),
+                  s(:argument,
+                    s(:string, "first"))),
+                 s(:filter,
+                  s(:target, "this"),
+                  s(:operator, "is"),
+                  s(:argument,
+                    s(:string, "second"))))
+
+    actual = ::CSDL::Builder.new.statement_scope do
+      [
+        filter("this", "is", "first"),
+        filter("this", "is", "second")
+      ]
+    end
+
+    assert_equal(expected, actual)
+  end
+
   def test_logical_group_0_children
     expected = s(:logical_group, nil)
     actual = ::CSDL::Builder.new.logical_group {}
