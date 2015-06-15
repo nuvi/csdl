@@ -3,29 +3,29 @@ require "test_helper"
 class BuilderTest < ::MiniTest::Test
   include ::AST::Sexp
 
-  def test_closure_0_children
-    expected = s(:closure, nil)
-    actual = ::CSDL::Builder.new.closure {}
+  def test_logical_group_0_children
+    expected = s(:logical_group, nil)
+    actual = ::CSDL::Builder.new.logical_group {}
     assert_equal(expected, actual)
   end
 
-  def test_closure_1_child
-    expected = s(:closure,
+  def test_logical_group_1_child
+    expected = s(:logical_group,
                  s(:filter,
                   s(:target, "foo"),
                   s(:operator, "bar"),
                   s(:argument,
                     s(:string, "baz"))))
 
-    actual = ::CSDL::Builder.new.closure do
+    actual = ::CSDL::Builder.new.logical_group do
       filter("foo", "bar", "baz")
     end
 
     assert_equal(expected, actual)
   end
 
-  def test_closure_2_children
-    expected = s(:closure,
+  def test_logical_group_2_children
+    expected = s(:logical_group,
                  s(:filter,
                   s(:target, "this"),
                   s(:operator, "is"),
@@ -37,7 +37,7 @@ class BuilderTest < ::MiniTest::Test
                   s(:argument,
                     s(:string, "second"))))
 
-    actual = ::CSDL::Builder.new.closure do
+    actual = ::CSDL::Builder.new.logical_group do
       [
         filter("this", "is", "first"),
         filter("this", "is", "second")

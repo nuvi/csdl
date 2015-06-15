@@ -2,10 +2,6 @@ module CSDL
   class Builder
     include ::AST::Sexp
 
-    def closure(&block)
-      __multi(:closure, &block)
-    end
-
     def _or(&block)
       __multi(:or, &block)
     end
@@ -31,6 +27,10 @@ module CSDL
       end
 
       s(:filter, *[target_node, operator_node, argument_node].compact)
+    end
+
+    def logical_group(&block)
+      __multi(:logical_group, &block)
     end
 
     def __multi(type, &block)
