@@ -237,4 +237,39 @@ class BuilderTest < ::MiniTest::Test
     assert_equal(expected, actual)
   end
 
+  def test_tag
+    expected = s(:tag,
+                 s(:tag_class,
+                   s(:string, "MyTag")),
+                 s(:statement_scope,
+                   s(:filter,
+                     s(:target, "foo"),
+                     s(:operator, "bar"))))
+
+    actual = ::CSDL::Builder.new.tag("MyTag") do
+      filter("foo", "bar")
+    end
+
+    assert_equal(expected, actual)
+  end
+
+  def test_tag_tree
+    expected = s(:tag,
+                 s(:tag_nodes,
+                   s(:tag_node, "foo"),
+                   s(:tag_node, "bar")),
+                 s(:tag_class,
+                   s(:string, "MyTag")),
+                 s(:statement_scope,
+                   s(:filter,
+                     s(:target, "baz"),
+                     s(:operator, "quux"))))
+
+    actual = ::CSDL::Builder.new.tag_tree(["foo", "bar"], "MyTag") do
+      filter("baz", "quux")
+    end
+
+    assert_equal(expected, actual)
+  end
+
 end

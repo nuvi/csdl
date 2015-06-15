@@ -46,5 +46,24 @@ module CSDL
       s(:statement_scope, *__one_or_more_child_nodes(&block))
     end
 
+    def tag(tag_class, &block)
+      s(:tag,
+        s(:tag_class,
+          s(:string, tag_class)),
+        statement_scope(&block))
+    end
+
+    def tag_tree(tag_nodes, tag_class, &block)
+      tag_node_nodes = tag_nodes.map do |tag_node|
+        s(:tag_node, tag_node)
+      end
+
+      s(:tag,
+        s(:tag_nodes,
+          *tag_node_nodes),
+        s(:tag_class,
+          s(:string, tag_class)),
+        statement_scope(&block))
+    end
   end
 end
