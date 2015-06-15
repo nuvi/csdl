@@ -38,8 +38,12 @@ module CSDL
       s(:filter, *[target_node, operator_node, argument_node].compact)
     end
 
-    def logical_group(&block)
-      s(:logical_group, *__one_or_more_child_nodes(&block))
+    def logical_group(logical_operator = nil, &block)
+      if logical_operator.nil?
+        s(:logical_group, *__one_or_more_child_nodes(&block))
+      else
+        s(:logical_group, s(logical_operator, *__one_or_more_child_nodes(&block)))
+      end
     end
 
     def statement_scope(&block)
