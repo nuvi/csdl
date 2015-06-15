@@ -5,7 +5,8 @@ module CSDL
   class InvalidQueryTargetError          < Error; end
   class MissingChildNodesError           < Error; end
   class MissingReturnStatementScopeError < Error; end
-  class MissingTagNameError              < Error; end
+  class MissingTagClassError             < Error; end
+  class MissingTagNodesError             < Error; end
   class MissingTagStatementScopeError    < Error; end
   class UnknownOperatorError             < Error; end
   class UnknownTargetError               < Error; end

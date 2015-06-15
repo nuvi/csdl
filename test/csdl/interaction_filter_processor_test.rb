@@ -55,9 +55,9 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_on_tag_name
+  def test_on_tag_class
     expected = %q{"MyTag"}
-    sexp = s(:tag_name,
+    sexp = s(:tag_class,
              s(:string, "MyTag"))
     assert_csdl_equal(expected, sexp)
   end
@@ -65,15 +65,15 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
   def test_on_tag
     expected = %q{tag "MyTag" {"foo"}}
     sexp = s(:tag,
-             s(:tag_name,
+             s(:tag_class,
                s(:string, "MyTag")),
              s(:statement_scope,
                s(:string, "foo")))
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_on_tag_with_missing_tag_name
-    assert_raises(::CSDL::MissingTagNameError) do
+  def test_on_tag_with_missing_tag_class
+    assert_raises(::CSDL::MissingTagClassError) do
       sexp = s(:tag,
                s(:statement_scope,
                  s(:string, "foo")))
@@ -84,10 +84,46 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
   def test_on_tag_with_missing_statement_scope
     assert_raises(::CSDL::MissingTagStatementScopeError) do
       sexp = s(:tag,
-               s(:tag_name,
+               s(:tag_class,
                  s(:string, "foo")))
       ::CSDL::InteractionFilterProcessor.new.process(sexp)
     end
+  end
+
+  def test_on_tag_class
+    expected = %q{"MyTag"}
+    sexp = s(:tag_class,
+             s(:string, "MyTag"))
+    assert_csdl_equal(expected, sexp)
+  end
+
+  def test_on_tag_nodes
+    expected = %q{.foo.bar}
+    sexp = s(:tag_nodes,
+             s(:tag_node, "foo"),
+             s(:tag_node, "bar"))
+    assert_csdl_equal(expected, sexp)
+  end
+
+  def test_on_tag_nodes_without_tag_node_children
+    assert_raises(::CSDL::MissingTagNodesError) do
+      sexp = s(:tag_nodes,
+              s(:string, "foo"))
+      ::CSDL::InteractionFilterProcessor.new.process(sexp)
+    end
+  end
+
+  def test_on_tag_with_tree_nodes
+    expected = %q{tag.foo.bar "MyTag" {"baz"}}
+    sexp = s(:tag,
+             s(:tag_nodes,
+               s(:tag_node, "foo"),
+               s(:tag_node, "bar")),
+             s(:tag_class,
+               s(:string, "MyTag")),
+             s(:statement_scope,
+               s(:string, "baz")))
+    assert_csdl_equal(expected, sexp)
   end
 
   private
