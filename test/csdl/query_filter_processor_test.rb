@@ -1,6 +1,7 @@
 require "test_helper"
 
 class QueryFilterProcessorTest < ::MiniTest::Test
+  include ::AST::Sexp
 
   def test_valid_query_targets
     ::CSDL::QUERY_TARGETS.keys.each do |target_name|
