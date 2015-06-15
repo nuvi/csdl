@@ -1,6 +1,7 @@
 require "test_helper"
 
 class InteractionFilterProcessorTest < ::MiniTest::Test
+  include ::AST::Sexp
 
   def test_valid_interaction_targets
     ::CSDL::INTERACTION_TARGETS.keys.each do |target_name|

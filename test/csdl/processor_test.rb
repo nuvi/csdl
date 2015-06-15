@@ -1,13 +1,14 @@
 require "test_helper"
 
 class ProcessorTest < ::MiniTest::Test
+  include ::AST::Sexp
 
   def test_binary_and
     expected = %q{"foo" AND "bar"}
     sexp = s(:and,
             s(:string, "foo"),
             s(:string, "bar"))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_multi_and
@@ -16,14 +17,14 @@ class ProcessorTest < ::MiniTest::Test
             s(:string, "foo"),
             s(:string, "bar"),
             s(:string, "baz"))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_argument
     expected = %q{"foo"}
     sexp = s(:argument,
              s(:string, "foo"))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_multiple_argument_children
@@ -31,26 +32,26 @@ class ProcessorTest < ::MiniTest::Test
     sexp = s(:argument,
              s(:string, "foo"),
              s(:string, "bar"))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
-  def test_empty_closure
+  def test_empty_logical_group
     expected = "()"
-    sexp = s(:closure)
-    assert_csdl_matches(expected, sexp)
+    sexp = s(:logical_group)
+    assert_csdl_equal(expected, sexp)
   end
 
-  def test_closure_with_filter
+  def test_logical_group_with_filter
     target = ::CSDL::TARGETS.keys.sample
     operator = ::CSDL::OPERATORS.keys.sample
     expected = %Q{(#{target} #{operator} "baz")}
-    sexp = s(:closure,
+    sexp = s(:logical_group,
              s(:filter,
                s(:target, target),
                s(:operator, operator),
                s(:argument,
                  s(:string, "baz"))))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_not
@@ -62,13 +63,13 @@ class ProcessorTest < ::MiniTest::Test
              s(:operator, operator),
              s(:argument,
                s(:string, "baz")))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_operator
     operator = ::CSDL::OPERATORS.keys.sample
     sexp = s(:operator, operator)
-    assert_csdl_matches(operator, sexp)
+    assert_csdl_equal(operator, sexp)
   end
 
   def test_invalid_operator
@@ -91,7 +92,7 @@ class ProcessorTest < ::MiniTest::Test
     sexp = s(:or,
             s(:string, "foo"),
             s(:string, "bar"))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_multi_or
@@ -100,19 +101,19 @@ class ProcessorTest < ::MiniTest::Test
             s(:string, "foo"),
             s(:string, "bar"),
             s(:string, "baz"))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_string_with_quotes
     expected = '"this string has \"quotes\""'
     sexp = s(:string, 'this string has "quotes"')
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_target
     target = ::CSDL::TARGETS.keys.sample
     sexp = s(:target, target)
-    assert_csdl_matches(target, sexp)
+    assert_csdl_equal(target, sexp)
   end
 
   def test_filter
@@ -124,14 +125,14 @@ class ProcessorTest < ::MiniTest::Test
              s(:operator, operator),
              s(:argument,
                s(:string, "baz")))
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   def test_grouped_expressions
     expected = %q{(fb.content contains_any "foo" OR fb.parent.content contains_any "foo") AND (fb.content contains_any "bar" OR fb.parent.content contains_any "bar")}
     sexp = \
       s(:and,
-        s(:closure,
+        s(:logical_group,
           s(:or,
             s(:filter,
               s(:target, "fb.content"),
@@ -149,7 +150,7 @@ class ProcessorTest < ::MiniTest::Test
               ),
            ),
          ),
-         s(:closure,
+         s(:logical_group,
            s(:or,
              s(:filter,
                s(:target, "fb.content"),
@@ -169,12 +170,12 @@ class ProcessorTest < ::MiniTest::Test
           )
        )
 
-    assert_csdl_matches(expected, sexp)
+    assert_csdl_equal(expected, sexp)
   end
 
   private
 
-  def assert_csdl_matches(expected, sexp)
+  def assert_csdl_equal(expected, sexp)
     assert_equal(expected, ::CSDL::Processor.new.process(sexp))
   end
 

@@ -15,7 +15,7 @@ module CSDL
       process(node.children.first)
     end
 
-    def on_closure(node)
+    def on_logical_group(node)
       "(" + process_all(node.children).join(" ") + ")"
     end
 
@@ -60,7 +60,7 @@ module CSDL
     end
 
     def on_filter(node)
-      target = node.children.find { |child| child.type == :target }
+      target   = node.children.find { |child| child.type == :target }
       operator = node.children.find { |child| child.type == :operator }
       argument = node.children.find { |child| child.type == :argument }
       process_all([ target, operator, argument ].compact).join(" ")
