@@ -2,7 +2,7 @@ module CSDL
   class Builder
     include ::AST::Sexp
 
-    def __multi(type, &block)
+    def __one_or_more_child_nodes(type, &block)
       children = instance_eval(&block)
       children = [ children ].flatten
 
@@ -14,11 +14,11 @@ module CSDL
     end
 
     def _or(&block)
-      __multi(:or, &block)
+      __one_or_more_child_nodes(:or, &block)
     end
 
     def _and(&block)
-      __multi(:and, &block)
+      __one_or_more_child_nodes(:and, &block)
     end
 
     def _not(target, operator, argument = nil)
@@ -45,11 +45,11 @@ module CSDL
     end
 
     def logical_group(&block)
-      __multi(:logical_group, &block)
+      __one_or_more_child_nodes(:logical_group, &block)
     end
 
     def statement_scope(&block)
-      __multi(:statement_scope, &block)
+      __one_or_more_child_nodes(:statement_scope, &block)
     end
 
   end
