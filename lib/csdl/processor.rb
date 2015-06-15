@@ -27,19 +27,23 @@ module CSDL
     end
 
     def on_operator(node)
-      node.children.first.to_s
+      operator = node.children.first.to_s
+      unless ::CSDL.operator?(operator)
+        fail ::CSDL::UnknownOperatorError, "Operator #{operator} is unknown"
+      end
+      operator
     end
 
     def on_or(node)
       if node.children.empty?
-        fail CSDL::MissingChildNodesError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got 0"
+        fail ::CSDL::MissingChildNodesError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got 0"
       end
 
       initial = process(node.children.first)
       rest = node.children.drop(1)
 
       if rest.empty?
-        fail CSDL::MissingChildNodesError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got #{node.children.size}"
+        fail ::CSDL::MissingChildNodesError, "Invalid CSDL AST: 'or' nodes must contain at least two child nodes. Expected >= 2, got #{node.children.size}"
       end
 
       rest.reduce(initial) do |csdl, child|

@@ -42,11 +42,12 @@ class ProcessorTest < ::MiniTest::Test
 
   def test_closure_with_filter
     target = ::CSDL::TARGETS.keys.sample
-    expected = %Q{(#{target} bar "baz")}
+    operator = ::CSDL::OPERATORS.keys.sample
+    expected = %Q{(#{target} #{operator} "baz")}
     sexp = s(:closure,
              s(:filter,
                s(:target, target),
-               s(:operator, "bar"),
+               s(:operator, operator),
                s(:argument,
                  s(:string, "baz"))))
     assert_csdl_matches(expected, sexp)
@@ -54,13 +55,27 @@ class ProcessorTest < ::MiniTest::Test
 
   def test_not
     target = ::CSDL::TARGETS.keys.sample
-    expected = %Q{NOT #{target} bar "baz"}
+    operator = ::CSDL::OPERATORS.keys.sample
+    expected = %Q{NOT #{target} #{operator} "baz"}
     sexp = s(:not,
              s(:target, target),
-             s(:operator, "bar"),
+             s(:operator, operator),
              s(:argument,
                s(:string, "baz")))
     assert_csdl_matches(expected, sexp)
+  end
+
+  def test_operator
+    operator = ::CSDL::OPERATORS.keys.sample
+    sexp = s(:operator, operator)
+    assert_csdl_matches(operator, sexp)
+  end
+
+  def test_invalid_operator
+    assert_raises(::CSDL::UnknownOperatorError) do
+      sexp = s(:operator, "foo")
+      ::CSDL::Processor.new.process(sexp)
+    end
   end
 
   def test_unary_or
@@ -102,10 +117,11 @@ class ProcessorTest < ::MiniTest::Test
 
   def test_filter
     target = ::CSDL::TARGETS.keys.sample
-    expected = %Q{#{target} bar "baz"}
+    operator = ::CSDL::OPERATORS.keys.sample
+    expected = %Q{#{target} #{operator} "baz"}
     sexp = s(:filter,
              s(:target, target),
-             s(:operator, "bar"),
+             s(:operator, operator),
              s(:argument,
                s(:string, "baz")))
     assert_csdl_matches(expected, sexp)
