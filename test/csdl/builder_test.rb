@@ -223,4 +223,18 @@ class BuilderTest < ::MiniTest::Test
     assert_equal(expected, actual)
   end
 
+  def test_return
+    expected = s(:return,
+                 s(:statement_scope,
+                   s(:filter,
+                     s(:target, "foo"),
+                     s(:operator, "bar"))))
+
+    actual = ::CSDL::Builder.new._return do
+      filter("foo", "bar")
+    end
+
+    assert_equal(expected, actual)
+  end
+
 end

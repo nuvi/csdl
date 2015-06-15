@@ -2,6 +2,17 @@ module CSDL
   class Builder
     include ::AST::Sexp
 
+    def __multi(type, &block)
+      children = instance_eval(&block)
+      children = [ children ].flatten
+
+      if children.empty?
+        s(type)
+      else
+        s(type, *children)
+      end
+    end
+
     def _or(&block)
       __multi(:or, &block)
     end
@@ -13,6 +24,10 @@ module CSDL
     def _not(target, operator, argument = nil)
       node = filter(target, operator, argument)
       node.updated(:not)
+    end
+
+    def _return(&block)
+      s(:return, statement_scope(&block))
     end
 
     def filter(target, operator, argument = nil)
@@ -35,17 +50,6 @@ module CSDL
 
     def statement_scope(&block)
       __multi(:statement_scope, &block)
-    end
-
-    def __multi(type, &block)
-      children = instance_eval(&block)
-      children = [ children ].flatten
-
-      if children.empty?
-        s(type)
-      else
-        s(type, *children)
-      end
     end
 
   end
