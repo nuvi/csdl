@@ -27,6 +27,7 @@ Or install it yourself as:
 Use the DSL provided by `CSDL::Builder` to produce an AST representation of your query, and use `CSDL::Processor` to turn your AST into a raw CSDL string.
 
 Valid builder methods are:
+
 - `_and` - `AND`s two or more child statements together.
 - `_not` - Negates a `filter` statement.
 - `_or` - `OR`s two or more child statements together.

@@ -2,7 +2,7 @@ module CSDL
 
   Target = Struct.new(:name, :interaction?, :analysis?, :query?)
 
-  raw_targets = [
+  RAW_TARGETS = [
 
     [ "fb.author.age"                     , true  , true  , true  ] ,
     [ "fb.author.country"                 , true  , true  , true  ] ,

@@ -2,7 +2,7 @@ module CSDL
 
   Operator = Struct.new(:name, :argument_types)
 
-  raw_operators = [
+  RAW_OPERATORS = [
     [ "contains"         , [ :string ] ],
     [ "cs contains"      , [ :string ] ],
     [ "substr"           , [ :string ] ],
