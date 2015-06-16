@@ -190,7 +190,7 @@ module CSDL
     #
     # @return [String] The first child, stringified.
     #
-    # @raise [UnknownTargetError] When the terminator value is not a valid operator. See {CSDL.operator?}.
+    # @raise [UnknownTargetError] When the terminator value is not a valid operator. See {#validate_target!}.
     #
     # @see #validate_target!
     #
@@ -208,9 +208,9 @@ module CSDL
     # @example
     #   CSDL::Processor.new.validate_target!("fake") # => raises UnknownTargetError
     #
-    # @param node [AST::Node] The :target node to be processed.
+    # @param target_key [String] The target to validate.
     #
-    # @return [String] The first child, stringified.
+    # @return [void]
     #
     # @raise [UnknownTargetError] When the terminator value is not a valid operator. See {CSDL.operator?}.
     #
