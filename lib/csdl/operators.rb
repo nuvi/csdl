@@ -1,5 +1,3 @@
-require "csdl/operator"
-
 module CSDL
 
   # A CSDL Operator definition with indication as to valid data types to be used with the operator.

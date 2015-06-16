@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class CsdlTest < Minitest::Test
+class CSDLTest < Minitest::Test
   def test_that_it_has_a_version_number
-    refute_nil ::Csdl::VERSION
+    refute_nil ::CSDL::VERSION
   end
 end

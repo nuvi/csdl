@@ -1,4 +1,21 @@
 module CSDL
+
+  # {Builder} is a class used to produce {AST::Node} objects built to be processed
+  # by any one of {Processor}, {InteractionFilterProcessor}, or {QueryFilterProcessor}.
+  #
+  # @example
+  #   # Generate your CSDL nodes using the Builder
+  #   root_node = CSDL::Builder.new.logical_group(:or) do
+  #     #...
+  #     filter("fb.content", :contains, "match this string")
+  #     #...
+  #   end
+  #
+  #   # Process the root node and its children calling the instance method #process
+  #   CSDL::Processor.new.process(root_node)
+  #
+  # @see http://dev.datasift.com/docs/csdl DataSift CSDL Language Documentation
+  #
   class Builder
     include ::AST::Sexp
 

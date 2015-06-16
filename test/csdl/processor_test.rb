@@ -3,7 +3,22 @@ require "test_helper"
 class ProcessorTest < ::MiniTest::Test
   include ::AST::Sexp
 
-  def test_binary_and
+  def test_and_with_0_children
+    assert_raises(::CSDL::MissingChildNodesError) do
+      sexp = s(:and)
+      ::CSDL::Processor.new.process(sexp)
+    end
+  end
+
+  def test_and_with_1_child
+    assert_raises(::CSDL::MissingChildNodesError) do
+      sexp = s(:and,
+               s(:string, "foo"))
+      ::CSDL::Processor.new.process(sexp)
+    end
+  end
+
+  def test_and_with_2_children
     expected = %q{"foo" AND "bar"}
     sexp = s(:and,
             s(:string, "foo"),
@@ -11,7 +26,7 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_multi_and
+  def test_and_with_3_children
     expected = %q{"foo" AND "bar" AND "baz"}
     sexp = s(:and,
             s(:string, "foo"),
@@ -79,7 +94,14 @@ class ProcessorTest < ::MiniTest::Test
     end
   end
 
-  def test_unary_or
+  def test_or_with_0_children
+    assert_raises(::CSDL::MissingChildNodesError) do
+      sexp = s(:or)
+      ::CSDL::Processor.new.process(sexp)
+    end
+  end
+
+  def test_or_with_1_child
     assert_raises(::CSDL::MissingChildNodesError) do
       sexp = s(:or,
                s(:string, "foo"))
@@ -87,7 +109,7 @@ class ProcessorTest < ::MiniTest::Test
     end
   end
 
-  def test_binary_or
+  def test_or_with_2_children
     expected = %q{"foo" OR "bar"}
     sexp = s(:or,
             s(:string, "foo"),
@@ -95,7 +117,7 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_multi_or
+  def test_or_with_3_children
     expected = %q{"foo" OR "bar" OR "baz"}
     sexp = s(:or,
             s(:string, "foo"),
