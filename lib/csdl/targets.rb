@@ -1,7 +1,20 @@
 module CSDL
 
+  # A CSDL Target definition with indication as to where the target can be used.
+  #
+  # @attr name [String] The name of the target.
+  # @attr interaction? [Boolean] True if the target is availble for use in an Interaction Filter.
+  # @attr analysis? [Boolean] True if the target is availble for use as an Analysis Target.
+  # @attr query? [Boolean] True if the target is availble for use in a Query Filter.
+  #
+  # @see TARGETS
+  #
   Target = Struct.new(:name, :interaction?, :analysis?, :query?)
 
+  # A raw array of targets with their usage flags.
+  #
+  # @return [Array<String, Boolean, Boolean, Boolean>] Array of targets used to produce {TARGETS} hash.
+  #
   RAW_TARGETS = [
 
     [ "fb.author.age"                     , true  , true  , true  ] ,
@@ -67,6 +80,10 @@ module CSDL
     [ "links.url"                         , true  , true  , true  ]
   ]
 
+  # All possible targets.
+  #
+  # @return [Hash<String, Target>] Hash of {Target} structs, keyed by the string name of the target.
+  #
   TARGETS = RAW_TARGETS.reduce({}) do |accumulator, (target_name, interaction, analysis, query)|
     accumulator[target_name] = Target.new(target_name, interaction, analysis, query)
     accumulator
@@ -76,18 +93,58 @@ module CSDL
   ANALYSIS_TARGETS    = TARGETS.select { |_, target| target.analysis? }
   QUERY_TARGETS       = TARGETS.select { |_, target| target.query? }
 
+  # Check if the given target is a valid target.
+  #
+  # @example
+  #   CSDL.target?("fake") # => false
+  #   CSDL.target?("fb.content") # => true
+  #
+  # @param target_name [String] The name of the target.
+  #
+  # @return [Boolean] Whether or not the value is a valid CSDL Target.
+  #
   def self.target?(target_name)
     TARGETS.key?(target_name)
   end
 
+  # Check if the given target is a valid interaction target.
+  #
+  # @example
+  #   CSDL.interaction_target?("interaction.tags") # => false
+  #   CSDL.interaction_target?("interaction.content") # => true
+  #
+  # @param target_name [String] The name of the target.
+  #
+  # @return [Boolean] Whether or not the value is a valid CSDL Interaction Filter Target.
+  #
   def self.interaction_target?(target_name)
     INTERACTION_TARGETS.key?(target_name)
   end
 
+  # Check if the given target is a valid analysis target.
+  #
+  # @example
+  #   CSDL.analysis_target?("interaction.content") # => false
+  #   CSDL.analysis_target?("interaction.tags") # => true
+  #
+  # @param target_name [String] The name of the target.
+  #
+  # @return [Boolean] Whether or not the value is a valid CSDL Analysis Target.
+  #
   def self.analysis_target?(target_name)
     ANALYSIS_TARGETS.key?(target_name)
   end
 
+  # Check if the given target is a valid query target.
+  #
+  # @example
+  #   CSDL.query_target?("fb.topics.website") # => false
+  #   CSDL.query_target?("fb.topic_ids") # => true
+  #
+  # @param target_name [String] The name of the target.
+  #
+  # @return [Boolean] Whether or not the value is a valid CSDL Query Filter Target.
+  #
   def self.query_target?(target_name)
     QUERY_TARGETS.key?(target_name)
   end

@@ -14,7 +14,7 @@ module CSDL
     #   end
     #   CSDL::Processor.new.process(nodes) # => 'fb.content contains "this is a string" AND fb.parent.content contains "this is a string"'
     #
-    # @param &block [Proc] Block to return child nodes to apply to this :and node. Block is evaluated against the builder instance.
+    # @param block [Proc] Block to return child nodes to apply to this :and node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by an :and node.
     #
     # @return [AST::Node] An AST :and node with its children being the node(s) returned by the block.
@@ -65,7 +65,7 @@ module CSDL
     #   end
     #   CSDL::Processor.new.process(nodes) # => 'fb.content contains "this is a string" OR fb.parent.content contains "this is a string"'
     #
-    # @param &block [Proc] Block to return child nodes to apply to this :or node. Block is evaluated against the builder instance.
+    # @param block [Proc] Block to return child nodes to apply to this :or node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by an :or node.
     # @return [AST::Node] An AST :or node with its children being the node(s) returned by the block.
     #
@@ -83,7 +83,7 @@ module CSDL
     #   end
     #   CSDL::Processor.new.process(nodes) # => 'return {fb.content contains "this is a string"}'
     #
-    # @param &block [Proc] Block to return child nodes to apply to a :statement_scope node. Block is evaluated against the builder instance.
+    # @param block [Proc] Block to return child nodes to apply to a :statement_scope node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node.
     #
     # @return [AST::Node] An AST :return node with a single child :statement_scope node, its children being the node(s) returned by the block.
@@ -187,7 +187,7 @@ module CSDL
     #   end
     #   CSDL::Processor.new.process(nodes) # => '(fb.content contains "this is a string" OR fb.parent.content contains "this is a string") AND (fb.author.age == "25-34" OR fb.parent.author.age == "25-34") AND (fb.author.gender == "male" OR fb.parent.author.gender == "male") AND fb.author.region == "texas"'
     #
-    # @param &block [Proc] Block to return child nodes to apply to this :logical_group node. Block is evaluated against the builder instance.
+    # @param block [Proc] Block to return child nodes to apply to this :logical_group node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :logical_group node (and possibly also a node for the logical operator).
     #
     # @return [AST::Node] An AST :logical_operator node with its children being the node(s) returned by the block.
@@ -213,7 +213,7 @@ module CSDL
     #   end
     #   CSDL::Processor.new.process(nodes) # => '{fb.content contains "this is a string"}'
     #
-    # @param &block [Proc] Block to return child nodes to apply to this :statement_scope node. Block is evaluated against the builder instance.
+    # @param block [Proc] Block to return child nodes to apply to this :statement_scope node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node.
     #
     # @return [AST::Node] An AST :statement_scope node with its children being the node(s) returned by the block.
@@ -235,7 +235,7 @@ module CSDL
     #   CSDL::Processor.new.process(nodes) # => 'tag "MyTag" {fb.content contains "this is a string"}'
     #
     # @param tag_class [#to_s] The tag classification.
-    # @param &block [Proc] Block to return child nodes to apply to a :statement_scope node nested under the :tag node. Block is evaluated against the builder instance.
+    # @param block [Proc] Block to return child nodes to apply to a :statement_scope node nested under the :tag node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node, to be a child of the returned :tag node.
     #
     # @return [AST::Node] An AST :tag node with a :tag_class child node and :statement_scope child node.
@@ -250,7 +250,7 @@ module CSDL
         statement_scope(&block))
     end
 
-    # Wrap child nodes in a VEDO tag classification.
+    # Wrap child nodes in a VEDO tag classification tree.
     #
     # @example
     #   nodes = CSDL::Builder.new.tag_tree(%w(foo bar), "MyTag") do
@@ -260,7 +260,7 @@ module CSDL
     #
     # @param tag_nodes [Array<#to_s>] List of classification namespaces.
     # @param tag_class [#to_s] The tag classification.
-    # @param &block [Proc] Block to return child nodes to apply to a :statement_scope node nested under the :tag node. Block is evaluated against the builder instance.
+    # @param block [Proc] Block to return child nodes to apply to a :statement_scope node nested under the :tag node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node, to be a child of the returned :tag node.
     #
     # @return [AST::Node] An AST :tag node with a :tag_nodes child node, :tag_class child node, and :statement_scope child node.

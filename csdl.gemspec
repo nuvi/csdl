@@ -5,7 +5,7 @@ require 'csdl/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "csdl"
-  spec.version       = Csdl::VERSION
+  spec.version       = CSDL::VERSION
   spec.authors       = ["BJ Neilsen"]
   spec.email         = ["bj.neilsen@gmail.com"]
 
