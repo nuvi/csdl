@@ -3,6 +3,7 @@
 CSDL is a gem for producing Abstract Syntax Trees for the [DataSift CSDL Filter Language](http://dev.datasift.com/docs/csdl).
 Working with an AST instead of raw strings provides a simpler way to test and validate any given CSDL filter.
 
+[![Gem Version](https://badge.fury.io/rb/csdl.svg)](http://badge.fury.io/rb/csdl)
 [![Build Status](https://travis-ci.org/localshred/csdl.svg)](https://travis-ci.org/localshred/csdl)
 
 ## Installation
@@ -25,41 +26,44 @@ Or install it yourself as:
 
 Use the DSL provided by `CSDL::Builder` to produce an AST representation of your query, and use `CSDL::Processor` to turn your AST into a raw CSDL string.
 
-Valid builder methods are `closure`, `filter`, `_and`, `_or`, and `_not`. The last three are prefixed to avoid keyword collision.
+Valid builder methods are:
+- `_and` - `AND`s two or more child statements together.
+- `_not` - Negates a `filter` statement.
+- `_or` - `OR`s two or more child statements together.
+- `_return` - Creates a return statement with an implicit `statement_scope`.
+- `filter` - Builds a `target + operator + argument` group. Ensures `target` and `operator` are valid.
+- `logical_group` - Create a parenthetical grouping for nested statements. Optionally takes a logical operator as the first argument since we commonly want to wrap OR'd or AND'd statements in a logical group.
+- `statement_scope` - Create a braced grouping for nested statements used by tag and return blocks.
+- `tag` - Builds a tag classifier (e.g. `tag "Desire" { ... }`).
+- `tag_tree` - Builds a tag tree classifier (e.g. `tag.movies "Video" { ... }`).
+
+Methods prefixed with "\_" are to avoid ruby keyword collisions.
 
 ```ruby
 builder = ::CSDL::Builder.new._or do
   [
-    closure {
-      _and {
-        [
-          closure {
-            _or {
-              [
-                filter("fb.content", :contains_any, "ebola"),
-                filter("fb.parent.content", :contains_any, "ebola")
-              ]
-            }
-          },
-          _not("fb.content", :contains_any, "government,politics"),
-          filter("fb.author.country_code", :in, "GB")
-        ]
-      }
+    logical_group(:and) {
+      [
+        logical_group(:or) {
+          [
+            filter("fb.content", :contains_any, "ebola"),
+            filter("fb.parent.content", :contains_any, "ebola")
+          ]
+        },
+        _not("fb.content", :contains_any, "government,politics"),
+        filter("fb.author.country_code", :in, "GB")
+      ]
     },
-    closure {
-      _and {
-        [
-          closure {
-            _or {
-              [
-                filter("fb.content", :contains_any, "malta,malta island,#malta"),
-                filter("fb.parent.content", :contains_any, "malta,malta island,#malta")
-              ]
-            }
-          },
-          _not("fb.content", :contains_any, "vacation,poker awards")
-        ]
-      }
+    logical_group(:and) {
+      [
+        logical_group(:or) {
+          [
+            filter("fb.content", :contains_any, "malta,malta island,#malta"),
+            filter("fb.parent.content", :contains_any, "malta,malta island,#malta")
+          ]
+        },
+        _not("fb.content", :contains_any, "vacation,poker awards")
+      ]
     }
   ]
 end
@@ -78,9 +82,9 @@ The previous script produces the following output:
 ```
 Builder...
 (or
-  (closure
+  (logical_group
     (and
-      (closure
+      (logical_group
         (or
           (filter
             (target "fb.content")
@@ -102,9 +106,9 @@ Builder...
         (operator :in)
         (argument
           (string "GB")))))
-  (closure
+  (logical_group
     (and
-      (closure
+      (logical_group
         (or
           (filter
             (target "fb.content")

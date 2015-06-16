@@ -7,10 +7,6 @@ module CSDL
       [ children ].flatten
     end
 
-    def _or(&block)
-      s(:or, *__one_or_more_child_nodes(&block))
-    end
-
     def _and(&block)
       s(:and, *__one_or_more_child_nodes(&block))
     end
@@ -18,6 +14,10 @@ module CSDL
     def _not(target, operator, argument = nil)
       node = filter(target, operator, argument)
       node.updated(:not)
+    end
+
+    def _or(&block)
+      s(:or, *__one_or_more_child_nodes(&block))
     end
 
     def _return(&block)
