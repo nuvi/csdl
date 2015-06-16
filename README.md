@@ -5,6 +5,8 @@ Working with an AST instead of raw strings provides a simpler way to test and va
 
 [![Gem Version](https://badge.fury.io/rb/csdl.svg)](http://badge.fury.io/rb/csdl)
 [![Build Status](https://travis-ci.org/localshred/csdl.svg)](https://travis-ci.org/localshred/csdl)
+[![Yard Docs](http://img.shields.io/badge/yard-docs-blue.svg)](http://www.rubydoc.info/gems/csdl)
+[![Inline docs](http://inch-ci.org/github/localshred/csdl.svg?branch=master)](http://inch-ci.org/github/localshred/csdl)
 
 ## Installation
 
