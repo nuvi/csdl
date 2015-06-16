@@ -39,7 +39,7 @@ module CSDL
     [ "geo_polygon"      , [ :string ] ]
   ]
 
-  OPERATORS = raw_operators.reduce({}) do |accumulator, (operator_name, argument_types)|
+  OPERATORS = RAW_OPERATORS.reduce({}) do |accumulator, (operator_name, argument_types)|
     accumulator[operator_name] = Operator.new(operator_name, argument_types)
     accumulator
   end.freeze

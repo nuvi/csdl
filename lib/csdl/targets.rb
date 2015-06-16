@@ -67,7 +67,7 @@ module CSDL
     [ "links.url"                         , true  , true  , true  ]
   ]
 
-  TARGETS = raw_targets.reduce({}) do |accumulator, (target_name, interaction, analysis, query)|
+  TARGETS = RAW_TARGETS.reduce({}) do |accumulator, (target_name, interaction, analysis, query)|
     accumulator[target_name] = Target.new(target_name, interaction, analysis, query)
     accumulator
   end.freeze
