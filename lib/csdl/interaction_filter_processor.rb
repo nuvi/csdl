@@ -27,6 +27,7 @@ module CSDL
   #   end
   #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.cateogry in "Movie,Film,TV"}'
   #
+  # @see Processor
   # @see Builder
   # @see http://www.rubydoc.info/gems/ast/AST/Processor AST::Processor
   # @see http://www.rubydoc.info/gems/ast/AST/Node AST::Node
@@ -176,7 +177,8 @@ module CSDL
       "." + process_all(child_tag_nodes).join(".")
     end
 
-    # Raises an {InvalidInteractionTargetError} if the target isn't a valid CSDL target for interaction filters.
+    # Raises an {InvalidInteractionTargetError} if the target isn't a valid CSDL target for interaction filters. Will
+    # be called from the base class when given a :filter node with a :target node.
     #
     # @example
     #   CSDL::InteractionFilterProcessorProcessor.new.validate_target!("fake") # => raises InvalidInteractionTargetError
@@ -185,7 +187,10 @@ module CSDL
     #
     # @return [void]
     #
-    # @raise [InvalidInteractionTargetError] When the terminator value is not a valid operator. See {CSDL.operator?}.
+    # @raise [InvalidInteractionTargetError] When the terminator value is not a valid ineraction filter target. See {CSDL.interaction_target?}.
+    #
+    # @see Processor#on_filter
+    # @see Processor#on_target
     #
     def validate_target!(target_key)
       unless ::CSDL.interaction_target?(target_key)
