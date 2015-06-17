@@ -240,7 +240,7 @@ module CSDL
     #       }
     #     ]
     #   end
-    #   CSDL::Processor.new.process(nodes) # => 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.cateogry in "Movie,Film,TV"}'
+    #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.cateogry in "Movie,Film,TV"}'
     #
     # @param block [Proc] Block to return child nodes to apply to this :statement_scope node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node.

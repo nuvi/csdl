@@ -5,6 +5,28 @@ module CSDL
   #
   # Additional DSL methods provide the return statement, curly brace scopes (statement scopes), and VEDO tagging.
   #
+  # @example
+  #   nodes = CSDL::Builder.new.root do
+  #     [
+  #       tag_tree(%w(movies), "Video") {
+  #         filter("links.url", :any, "youtube.com,vimeo.com")
+  #       },
+  #       tag_tree(%w(movies), "Social Networks") {
+  #         filter("links.url", :any, "twitter.com,facebook.com")
+  #       },
+  #
+  #       return {
+  #         _or {
+  #           [
+  #             filter("fb.topics.category", :in, "Movie,Film,TV"),
+  #             filter("fb.parent.topics.category", :in, "Movie,Film,TV")
+  #           ]
+  #         }
+  #       }
+  #     ]
+  #   end
+  #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.cateogry in "Movie,Film,TV"}'
+  #
   # @see Builder
   # @see http://www.rubydoc.info/gems/ast/AST/Processor AST::Processor
   # @see http://www.rubydoc.info/gems/ast/AST/Node AST::Node
@@ -12,6 +34,20 @@ module CSDL
   #
   class InteractionFilterProcessor < ::CSDL::Processor
 
+    # Generate a return statement by processing the child statement_scope node.
+    #
+    # @raise [MissingReturnStatementScopeError] When the :return node is missing a :statement_scope child node.
+    #
+    # @example
+    #   node = s(:return,
+    #            s(:statement_scope,
+    #             s(:string, "foo")))
+    #   CSDL::InteractionFilterProcessor.new.process(node) # => 'return {"foo"}'
+    #
+    # @param node [AST::Node] The :return node to be processed.
+    #
+    # @return [String] The processed :statement_scope child node, prepended by the "return" keyword.
+    #
     def on_return(node)
       statement_scope = node.children.find { |child| child.type == :statement_scope }
 
@@ -22,10 +58,53 @@ module CSDL
       "return #{process(statement_scope)}"
     end
 
+    # Wrap child nodes in braces. Generally not useful on its own, see {#on_return} or {#on_tag} for integrated usage.
+    #
+    # @example
+    #   node = s(:statement_scope,
+    #           s(:string, "foo"))
+    #   CSDL::InteractionFilterProcessor.new.process(node) # => '{"foo"}'
+    #
+    # @param node [AST::Node] The :statement_scope node to be processed.
+    #
+    # @return [String] The processed child nodes, joined by an empty space and wrapped in braces.
+    #
+    # @see #on_return
+    # @see #on_tag
+    #
     def on_statement_scope(node)
       "{" + process_all(node.children).join(" ") + "}"
     end
 
+    # Process :tag node with it's child nodes :tag_nodes (optional), :tag_class, and :statement_scope.
+    #
+    # @example Tag Classification
+    #   node = s(:tag,
+    #           s(:tag_class,
+    #            s(:string, "MyTag")),
+    #           s(:statement_scope,
+    #            s(:string, "foo")))
+    #   CSDL::InteractionFilterProcessor.new.process(node) # => 'tag "MyTag" {"foo"}'
+    #
+    # @example Tag Tree Classification
+    #   node = s(:tag,
+    #           s(:tag_nodes,
+    #            s(:tag_node, "foo"),
+    #            s(:tag_node, "bar"),
+    #            s(:tag_node, "baz")),
+    #           s(:tag_class,
+    #            s(:string, "MyTag")),
+    #           s(:statement_scope,
+    #            s(:string, "value")))
+    #   CSDL::InteractionFilterProcessor.new.process(node) # => 'tag.foo.bar.baz "MyTag" {"value"}'
+    #
+    # @param node [AST::Node] The :tag node to be processed.
+    #
+    # @return [String] The tag classifier raw CSDL.
+    #
+    # @raise [MissingTagClassError] When we don't have a first-level :tag_nodes child.
+    # @raise [MissingTagStatementScopeError] When we don't have a first-level :statement_scope child.
+    #
     def on_tag(node)
       tag_nodes       = node.children.find { |child| child.type == :tag_nodes }
       tag_class       = node.children.find { |child| child.type == :tag_class }
@@ -48,14 +127,45 @@ module CSDL
       children.join(" ")
     end
 
+    # Process the first child of the :tag_class node.
+    #
+    # @param node [AST::Node] The :tag_class node to be processed.
+    #
+    # @return [String] The processed value of the first child node.
+    #
+    # @see #on_tag
+    #
     def on_tag_class(node)
       process(node.children.first)
     end
 
+    # Process the terminal value of the :tag_node node.
+    #
+    # @param node [AST::Node] The :tag_node node to be processed.
+    #
+    # @return [String] Terminal value as a string.
+    #
+    # @see #on_tag_nodes
+    #
     def on_tag_node(node)
       node.children.first.to_s
     end
 
+    # Process the :tag_node child nodes of a :tag_nodes node.
+    #
+    # @example
+    #   node = s(:tag_nodes,
+    #           s(:tag_node, "foo"),
+    #           s(:tag_node, "bar"),
+    #           s(:tag_node, "baz"))
+    #   CSDL::InteractionFilterProcessor.new.process(node) # => '.foo.bar.baz'
+    #
+    # @param node [AST::Node] The :tag_nodes node to be processed.
+    #
+    # @return [String] Dot-delimited tag node namespace.
+    #
+    # @raise [MissingTagNodesError] When there aren't any first-level :tag_node child nodes.
+    #
     def on_tag_nodes(node)
       child_tag_nodes = node.children.select { |child| child.type == :tag_node }
 
@@ -66,6 +176,17 @@ module CSDL
       "." + process_all(child_tag_nodes).join(".")
     end
 
+    # Raises an {InvalidInteractionTargetError} if the target isn't a valid CSDL target for interaction filters.
+    #
+    # @example
+    #   CSDL::InteractionFilterProcessorProcessor.new.validate_target!("fake") # => raises InvalidInteractionTargetError
+    #
+    # @param target_key [String] The target to validate.
+    #
+    # @return [void]
+    #
+    # @raise [InvalidInteractionTargetError] When the terminator value is not a valid operator. See {CSDL.operator?}.
+    #
     def validate_target!(target_key)
       unless ::CSDL.interaction_target?(target_key)
         fail ::CSDL::InvalidInteractionTargetError, "Interaction filters cannot use target '#{target_key}'"
