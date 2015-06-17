@@ -7,7 +7,7 @@ module CSDL
   #   # Generate your CSDL nodes using the Builder
   #   root_node = CSDL::Builder.new.logical_group(:or) do
   #     #...
-  #     filter("fb.content", :contains, "match this string")
+  #     condition("fb.content", :contains, "match this string")
   #     #...
   #   end
   #
@@ -40,7 +40,7 @@ module CSDL
       logically_join_nodes("AND", node.children)
     end
 
-    # Process the first child node as the "argument" in a filter node tree (target + operator + argument).
+    # Process the first child node as the "argument" in a condition node tree (target + operator + argument).
     #
     # @example
     #   node = s(:argument,
@@ -57,17 +57,17 @@ module CSDL
       process(node.children.first)
     end
 
-    # Process :filter node and it's expected children :target, :operator, and :argument nodes.
+    # Process :condition node and it's expected children :target, :operator, and :argument nodes.
     #
     # @example
-    #   node = s(:filter,
+    #   node = s(:condition,
     #             s(:target, "fb.content"),
     #             s(:operator, :contains_any),
     #             s(:argument,
     #               s(:string, "foo")))
     #   CSDL::Processor.new.process(node) # => 'fb.content contains_any "foo"'
     #
-    # @param node [AST::Node] The :filter node to be processed.
+    # @param node [AST::Node] The :condition node to be processed.
     #
     # @return [String] The child nodes :target, :operator, and :argument, processed and joined.
     #
@@ -76,7 +76,7 @@ module CSDL
     # @todo Raise when we don't have a argument node, assuming the operator is binary.
     # @todo Raise if the argument node's child is not of a valid node type for the given operator.
     #
-    def on_filter(node)
+    def on_condition(node)
       target   = node.children.find { |child| child.type == :target }
       operator = node.children.find { |child| child.type == :operator }
       argument = node.children.find { |child| child.type == :argument }
@@ -101,7 +101,7 @@ module CSDL
       "(" + process_all(node.children).join(" ") + ")"
     end
 
-    # Process :not node as a :filter node, prepending the logical operator NOT to the processed :filter node.
+    # Process :not node as a :condition node, prepending the logical operator NOT to the processed :condition node.
     #
     # @example
     #   node = s(:not,
@@ -122,7 +122,7 @@ module CSDL
     # @todo Support negating logical groupings.
     #
     def on_not(node)
-      "NOT " + process(node.updated(:filter))
+      "NOT " + process(node.updated(:condition))
     end
 
     # Process :operator nodes, ensuring the the given terminator value is a valid operator.

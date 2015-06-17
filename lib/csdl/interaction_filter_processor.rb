@@ -9,17 +9,17 @@ module CSDL
   #   nodes = CSDL::Builder.new.root do
   #     [
   #       tag_tree(%w(movies), "Video") {
-  #         filter("links.url", :any, "youtube.com,vimeo.com")
+  #         condition("links.url", :any, "youtube.com,vimeo.com")
   #       },
   #       tag_tree(%w(movies), "Social Networks") {
-  #         filter("links.url", :any, "twitter.com,facebook.com")
+  #         condition("links.url", :any, "twitter.com,facebook.com")
   #       },
   #
   #       return {
   #         _or {
   #           [
-  #             filter("fb.topics.category", :in, "Movie,Film,TV"),
-  #             filter("fb.parent.topics.category", :in, "Movie,Film,TV")
+  #             condition("fb.topics.category", :in, "Movie,Film,TV"),
+  #             condition("fb.parent.topics.category", :in, "Movie,Film,TV")
   #           ]
   #         }
   #       }
@@ -178,7 +178,7 @@ module CSDL
     end
 
     # Raises an {InvalidInteractionTargetError} if the target isn't a valid CSDL target for interaction filters. Will
-    # be called from the base class when given a :filter node with a :target node.
+    # be called from the base class when given a :condition node with a :target node.
     #
     # @example
     #   CSDL::InteractionFilterProcessorProcessor.new.validate_target!("fake") # => raises InvalidInteractionTargetError
@@ -189,7 +189,7 @@ module CSDL
     #
     # @raise [InvalidInteractionTargetError] When the terminator value is not a valid ineraction filter target. See {CSDL.interaction_target?}.
     #
-    # @see Processor#on_filter
+    # @see Processor#on_condition
     # @see Processor#on_target
     #
     def validate_target!(target_key)

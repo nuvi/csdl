@@ -56,12 +56,12 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_logical_group_with_filter
+  def test_logical_group_with_condition
     target = ::CSDL::TARGETS.keys.sample
     operator = ::CSDL::OPERATORS.keys.sample
     expected = %Q{(#{target} #{operator} "baz")}
     sexp = s(:logical_group,
-             s(:filter,
+             s(:condition,
                s(:target, target),
                s(:operator, operator),
                s(:argument,
@@ -138,11 +138,11 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_equal(target, sexp)
   end
 
-  def test_filter
+  def test_condition
     target = ::CSDL::TARGETS.keys.sample
     operator = ::CSDL::OPERATORS.keys.sample
     expected = %Q{#{target} #{operator} "baz"}
-    sexp = s(:filter,
+    sexp = s(:condition,
              s(:target, target),
              s(:operator, operator),
              s(:argument,
@@ -156,14 +156,14 @@ class ProcessorTest < ::MiniTest::Test
       s(:and,
         s(:logical_group,
           s(:or,
-            s(:filter,
+            s(:condition,
               s(:target, "fb.content"),
               s(:operator, :contains_any),
               s(:argument,
                 s(:string, "foo")
                )
              ),
-             s(:filter,
+             s(:condition,
                s(:target, "fb.parent.content"),
                s(:operator, :contains_any),
                s(:argument,
@@ -174,14 +174,14 @@ class ProcessorTest < ::MiniTest::Test
          ),
          s(:logical_group,
            s(:or,
-             s(:filter,
+             s(:condition,
                s(:target, "fb.content"),
                s(:operator, :contains_any),
                s(:argument,
                  s(:string, "bar")
                 )
               ),
-              s(:filter,
+              s(:condition,
                 s(:target, "fb.parent.content"),
                 s(:operator, :contains_any),
                 s(:argument,

@@ -7,7 +7,7 @@ module CSDL
   #   # Generate your CSDL nodes using the Builder
   #   root_node = CSDL::Builder.new.logical_group(:or) do
   #     #...
-  #     filter("fb.content", :contains, "match this string")
+  #     condition("fb.content", :contains, "match this string")
   #     #...
   #   end
   #
@@ -25,8 +25,8 @@ module CSDL
     # @example
     #   nodes = CSDL::Builder.new._and do
     #     [
-    #       filter("fb.content", :contains, "this is a string"),
-    #       filter("fb.parent.content", :contains, "this is a string"),
+    #       condition("fb.content", :contains, "this is a string"),
+    #       condition("fb.parent.content", :contains, "this is a string"),
     #     ]
     #   end
     #   CSDL::Processor.new.process(nodes) # => 'fb.content contains "this is a string" AND fb.parent.content contains "this is a string"'
@@ -42,7 +42,7 @@ module CSDL
       s(:and, *__one_or_more_child_nodes(&block))
     end
 
-    # Negate a filter. Analogous to {#filter} with NOT prepended to the condition.
+    # Negate a condition. Analogous to {#condition} with NOT prepended to the condition.
     #
     # @example
     #   node = CSDL::Builder.new._not("fb.content", :contains, "do not match this string")
@@ -63,10 +63,10 @@ module CSDL
     #
     # @return [AST::Node] An AST :not node with child target, operator, and argument nodes.
     #
-    # @see #filter
+    # @see #condition
     #
     def _not(target, operator, argument = nil)
-      node = filter(target, operator, argument)
+      node = condition(target, operator, argument)
       node.updated(:not)
     end
 
@@ -76,8 +76,8 @@ module CSDL
     # @example
     #   nodes = CSDL::Builder.new._or do
     #     [
-    #       filter("fb.content", :contains, "this is a string"),
-    #       filter("fb.parent.content", :contains, "this is a string")
+    #       condition("fb.content", :contains, "this is a string"),
+    #       condition("fb.parent.content", :contains, "this is a string")
     #     ]
     #   end
     #   CSDL::Processor.new.process(nodes) # => 'fb.content contains "this is a string" OR fb.parent.content contains "this is a string"'
@@ -98,7 +98,7 @@ module CSDL
     #
     # @example
     #   nodes = CSDL::Builder.new._return do
-    #     filter("fb.content", :contains, "this is a string")
+    #     condition("fb.content", :contains, "this is a string")
     #   end
     #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'return {fb.content contains "this is a string"}'
     #
@@ -117,14 +117,14 @@ module CSDL
     # See {#_not} if you wish to negate a single condition.
     #
     # @example
-    #   node = CSDL::Builder.new.filter("fb.content", :contains, "match this string")
+    #   node = CSDL::Builder.new.condition("fb.content", :contains, "match this string")
     #   CSDL::Processor.new.process(node) # => 'fb.content contains "match this string"'
     #
     # @example Multiple conditions ANDed together
     #   nodes = CSDL::Builder.new._and do
     #     [
-    #       filter("fb.content", :contains, "this is a string"),
-    #       filter("fb.parent.content", :contains, "this is a string"),
+    #       condition("fb.content", :contains, "this is a string"),
+    #       condition("fb.parent.content", :contains, "this is a string"),
     #     ]
     #   end
     #   CSDL::Processor.new.process(nodes) # => 'fb.content contains "this is a string" AND fb.parent.content contains "this is a string"'
@@ -133,11 +133,11 @@ module CSDL
     # @param operator [#to_s] A valid Operator specifier (see {CSDL::OPERATORS}).
     # @param argument [String, Numeric, nil] The comparator value, if applicable for the given operator.
     #
-    # @return [AST::Node] An AST :filter node with child target, operator, and argument nodes.
+    # @return [AST::Node] An AST :condition node with child target, operator, and argument nodes.
     #
     # @see #_not
     #
-    def filter(target, operator, argument = nil)
+    def condition(target, operator, argument = nil)
       target_node   = s(:target, target)
       operator_node = s(:operator, operator)
       argument_node = nil
@@ -148,7 +148,7 @@ module CSDL
         argument_node       = s(:argument, child_argument_node)
       end
 
-      s(:filter, *[target_node, operator_node, argument_node].compact)
+      s(:condition, *[target_node, operator_node, argument_node].compact)
     end
 
     # Wrap any child nodes in a logical grouping with parentheses. Additionally specify a logical
@@ -156,7 +156,7 @@ module CSDL
     #
     # @example
     #   nodes = CSDL::Builder.new.logical_group do
-    #     filter("fb.content", :contains, "this is a string")
+    #     condition("fb.content", :contains, "this is a string")
     #   end
     #   CSDL::Processor.new.process(nodes) # => '(fb.content contains "this is a string")'
     #
@@ -164,8 +164,8 @@ module CSDL
     #   nodes = CSDL::Builder.new.logical_group do
     #     _or do
     #       [
-    #         filter("fb.content", :contains, "this is a string"),
-    #         filter("fb.parent.content", :contains, "this is a string")
+    #         condition("fb.content", :contains, "this is a string"),
+    #         condition("fb.parent.content", :contains, "this is a string")
     #       ]
     #     end
     #   end
@@ -174,8 +174,8 @@ module CSDL
     # @example With logical operator argument, notice removal of _or block from previous example
     #   nodes = CSDL::Builder.new.logical_group(:or) do
     #     [
-    #       filter("fb.content", :contains, "this is a string"),
-    #       filter("fb.parent.content", :contains, "this is a string")
+    #       condition("fb.content", :contains, "this is a string"),
+    #       condition("fb.parent.content", :contains, "this is a string")
     #     ]
     #   end
     #   CSDL::Processor.new.process(nodes) # => '(fb.content contains "this is a string" OR fb.parent.content contains "this is a string")'
@@ -185,23 +185,23 @@ module CSDL
     #     [
     #       logical_group(:or) {
     #         [
-    #           filter("fb.content", :contains, "this is a string"),
-    #           filter("fb.parent.content", :contains, "this is a string")
+    #           condition("fb.content", :contains, "this is a string"),
+    #           condition("fb.parent.content", :contains, "this is a string")
     #         ]
     #       },
     #       logical_group(:or) {
     #         [
-    #           filter("fb.author.age", :==, "25-34"),
-    #           filter("fb.parent.author.age", :==, "25-34")
+    #           condition("fb.author.age", :==, "25-34"),
+    #           condition("fb.parent.author.age", :==, "25-34")
     #         ]
     #       },
     #       logical_group(:or) {
     #         [
-    #           filter("fb.author.gender", :==, "male"),
-    #           filter("fb.parent.author.gender", :==, "male")
+    #           condition("fb.author.gender", :==, "male"),
+    #           condition("fb.parent.author.gender", :==, "male")
     #         ]
     #       },
-    #       filter("fb.author.region", :==, "texas")
+    #       condition("fb.author.region", :==, "texas")
     #     ]
     #   end
     #   CSDL::Processor.new.process(nodes) # => '(fb.content contains "this is a string" OR fb.parent.content contains "this is a string") AND (fb.author.age == "25-34" OR fb.parent.author.age == "25-34") AND (fb.author.gender == "male" OR fb.parent.author.gender == "male") AND fb.author.region == "texas"'
@@ -227,14 +227,14 @@ module CSDL
     # @example
     #   nodes = CSDL::Builder.new.root do
     #     [
-    #       tag_tree(["movies"], "Video") { filter("links.url", :any, "youtube.com,vimeo.com") },
-    #       tag_tree(["movies"], "Social Networks") { filter("links.url", :any, "twitter.com,facebook.com") },
+    #       tag_tree(["movies"], "Video") { condition("links.url", :any, "youtube.com,vimeo.com") },
+    #       tag_tree(["movies"], "Social Networks") { condition("links.url", :any, "twitter.com,facebook.com") },
     #
     #       return {
     #         _or {
     #           [
-    #             filter("fb.topics.category", :in, "Movie,Film,TV"),
-    #             filter("fb.parent.topics.category", :in, "Movie,Film,TV")
+    #             condition("fb.topics.category", :in, "Movie,Film,TV"),
+    #             condition("fb.parent.topics.category", :in, "Movie,Film,TV")
     #           ]
     #         }
     #       }
@@ -260,7 +260,7 @@ module CSDL
     #
     # @example
     #   nodes = CSDL::Builder.new.statement_scope do
-    #     filter("fb.content", :contains, "this is a string")
+    #     condition("fb.content", :contains, "this is a string")
     #   end
     #   CSDL::InteractionFilterProcessor.new.process(nodes) # => '{fb.content contains "this is a string"}'
     #
@@ -283,7 +283,7 @@ module CSDL
     #
     # @example
     #   nodes = CSDL::Builder.new.tag("MyTag") do
-    #     filter("fb.content", :contains, "this is a string")
+    #     condition("fb.content", :contains, "this is a string")
     #   end
     #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag "MyTag" {fb.content contains "this is a string"}'
     #
@@ -309,7 +309,7 @@ module CSDL
     #
     # @example
     #   nodes = CSDL::Builder.new.tag_tree(%w(foo bar), "MyTag") do
-    #     filter("fb.content", :contains, "this is a string")
+    #     condition("fb.content", :contains, "this is a string")
     #   end
     #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag.foo.bar "MyTag" {fb.content contains "this is a string"}'
     #

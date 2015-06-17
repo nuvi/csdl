@@ -45,7 +45,7 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
                    s(:tag_class,
                      s(:string, "Video")),
                    s(:statement_scope,
-                     s(:filter,
+                     s(:condition,
                        s(:target, "links.url"),
                        s(:operator, :any),
                        s(:argument,
@@ -56,7 +56,7 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
                    s(:tag_class,
                      s(:string, "Social Networks")),
                    s(:statement_scope,
-                     s(:filter,
+                     s(:condition,
                        s(:target, "links.url"),
                        s(:operator, :any),
                        s(:argument,
@@ -64,12 +64,12 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
                  s(:return,
                    s(:statement_scope,
                      s(:or,
-                       s(:filter,
+                       s(:condition,
                          s(:target, "fb.topics.category"),
                          s(:operator, :in),
                          s(:argument,
                            s(:string, "Movie,Film,TV"))),
-                       s(:filter,
+                       s(:condition,
                          s(:target, "fb.parent.topics.category"),
                          s(:operator, :in),
                          s(:argument,
@@ -84,12 +84,12 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_on_statement_scope_with_filter
+  def test_on_statement_scope_with_condition
     target = ::CSDL::TARGETS.keys.sample
     operator = ::CSDL::OPERATORS.keys.sample
     expected = %Q{{#{target} #{operator} "baz"}}
     sexp = s(:statement_scope,
-             s(:filter,
+             s(:condition,
                s(:target, target),
                s(:operator, operator),
                s(:argument,

@@ -12,7 +12,7 @@ module CSDL
   class QueryFilterProcessor < ::CSDL::Processor
 
     # Raises an {InvalidQueryTargetError} if the target isn't a valid CSDL target for query filters. Will
-    # be called from the base class when given a :filter node with a :target node.
+    # be called from the base class when given a :condition node with a :target node.
     #
     # @example
     #   CSDL::QueryFilterProcessorProcessor.new.validate_target!("fake") # => raises InvalidQueryTargetError
@@ -23,7 +23,7 @@ module CSDL
     #
     # @raise [InvalidQueryTargetError] When the terminator value is not a valid query filter target. See {CSDL.query_target?}.
     #
-    # @see Processor#on_filter
+    # @see Processor#on_condition
     # @see Processor#on_target
     #
     def validate_target!(target_key)
