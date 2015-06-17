@@ -220,9 +220,41 @@ module CSDL
       end
     end
 
-    # Wrap child nodes in braces.
+    # Wrap child nodes in a root node. Useful for building CSDL with tagging and a return statement.
     #
-    # @note Generally not useful on its own, see {#_return}, {#tag}, or {#tag_tree} usage.
+    # @example
+    #   nodes = CSDL::Builder.new.root do
+    #     [
+    #       tag_tree(["movies"], "Video") { filter("links.url", :any, "youtube.com,vimeo.com") },
+    #       tag_tree(["movies"], "Social Networks") { filter("links.url", :any, "twitter.com,facebook.com") },
+    #
+    #       return {
+    #         _or {
+    #           [
+    #             filter("fb.topics.category", :in, "Movie,Film,TV"),
+    #             filter("fb.parent.topics.category", :in, "Movie,Film,TV")
+    #           ]
+    #         }
+    #       }
+    #     ]
+    #   end
+    #   CSDL::Processor.new.process(nodes) # => 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.cateogry in "Movie,Film,TV"}'
+    #
+    # @param block [Proc] Block to return child nodes to apply to this :statement_scope node. Block is evaluated against the builder instance.
+    # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node.
+    #
+    # @return [AST::Node] An AST :statement_scope node with its children being the node(s) returned by the block.
+    #
+    # @see #_return
+    # @see #tag_tree
+    #
+    def root(&block)
+      s(:root, *__one_or_more_child_nodes(&block))
+    end
+
+    # Wrap child nodes in braces. @note Generally not useful on its own, see {#_return}, {#tag}, or {#tag_tree} usage.
+    #
+    # @note The base {Processor} will not process statement_scope nodes, use {InteractionFilterProcessor} instead.
     #
     # @example
     #   nodes = CSDL::Builder.new.statement_scope do

@@ -3,6 +3,112 @@ require "test_helper"
 class BuilderTest < ::MiniTest::Test
   include ::AST::Sexp
 
+  def test_root_0_children
+    expected = s(:root, nil)
+    actual = ::CSDL::Builder.new.root {}
+    assert_equal(expected, actual)
+  end
+
+  def test_root_1_child
+    expected = s(:root,
+                 s(:filter,
+                  s(:target, "foo"),
+                  s(:operator, "bar"),
+                  s(:argument,
+                    s(:string, "baz"))))
+
+    actual = ::CSDL::Builder.new.root do
+      filter("foo", "bar", "baz")
+    end
+
+    assert_equal(expected, actual)
+  end
+
+  def test_root_2_children
+    expected = s(:root,
+                 s(:filter,
+                  s(:target, "this"),
+                  s(:operator, "is"),
+                  s(:argument,
+                    s(:string, "first"))),
+                 s(:filter,
+                  s(:target, "this"),
+                  s(:operator, "is"),
+                  s(:argument,
+                    s(:string, "second"))))
+
+    actual = ::CSDL::Builder.new.root do
+      [
+        filter("this", "is", "first"),
+        filter("this", "is", "second")
+      ]
+    end
+
+    assert_equal(expected, actual)
+  end
+
+  def test_root_with_tags_and_return_statement
+    expected = s(:root,
+                 s(:tag,
+                   s(:tag_nodes,
+                     s(:tag_node, "movies")),
+                   s(:tag_class,
+                     s(:string, "Video")),
+                   s(:statement_scope,
+                     s(:filter,
+                       s(:target, "links.url"),
+                       s(:operator, :any),
+                       s(:argument,
+                         s(:string, "youtube.com,vimeo.com"))))),
+                 s(:tag,
+                   s(:tag_nodes,
+                     s(:tag_node, "movies")),
+                   s(:tag_class,
+                     s(:string, "Social Networks")),
+                   s(:statement_scope,
+                     s(:filter,
+                       s(:target, "links.url"),
+                       s(:operator, :any),
+                       s(:argument,
+                         s(:string, "twitter.com,facebook.com"))))),
+                 s(:return,
+                   s(:statement_scope,
+                     s(:or,
+                       s(:filter,
+                         s(:target, "fb.topics.category"),
+                         s(:operator, :in),
+                         s(:argument,
+                           s(:string, "Movie,Film,TV"))),
+                       s(:filter,
+                         s(:target, "fb.parent.topics.category"),
+                         s(:operator, :in),
+                         s(:argument,
+                           s(:string, "Movie,Film,TV")))))))
+
+    actual = CSDL::Builder.new.root do
+      [
+        tag_tree(["movies"], "Video") {
+          filter("links.url", :any, "youtube.com,vimeo.com")
+        },
+
+        tag_tree(["movies"], "Social Networks") {
+          filter("links.url", :any, "twitter.com,facebook.com")
+        },
+
+        _return {
+          _or {
+            [
+              filter("fb.topics.category", :in, "Movie,Film,TV"),
+              filter("fb.parent.topics.category", :in, "Movie,Film,TV")
+            ]
+          }
+        }
+      ]
+    end
+
+    assert_equal(expected, actual)
+  end
+
   def test_statement_scope_0_children
     expected = s(:statement_scope, nil)
     actual = ::CSDL::Builder.new.statement_scope {}

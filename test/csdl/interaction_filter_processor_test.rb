@@ -36,6 +36,48 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
+  def test_root_with_tags_and_return_statement
+    expected = 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.category in "Movie,Film,TV"}'
+    sexp = s(:root,
+                 s(:tag,
+                   s(:tag_nodes,
+                     s(:tag_node, "movies")),
+                   s(:tag_class,
+                     s(:string, "Video")),
+                   s(:statement_scope,
+                     s(:filter,
+                       s(:target, "links.url"),
+                       s(:operator, :any),
+                       s(:argument,
+                         s(:string, "youtube.com,vimeo.com"))))),
+                 s(:tag,
+                   s(:tag_nodes,
+                     s(:tag_node, "movies")),
+                   s(:tag_class,
+                     s(:string, "Social Networks")),
+                   s(:statement_scope,
+                     s(:filter,
+                       s(:target, "links.url"),
+                       s(:operator, :any),
+                       s(:argument,
+                         s(:string, "twitter.com,facebook.com"))))),
+                 s(:return,
+                   s(:statement_scope,
+                     s(:or,
+                       s(:filter,
+                         s(:target, "fb.topics.category"),
+                         s(:operator, :in),
+                         s(:argument,
+                           s(:string, "Movie,Film,TV"))),
+                       s(:filter,
+                         s(:target, "fb.parent.topics.category"),
+                         s(:operator, :in),
+                         s(:argument,
+                           s(:string, "Movie,Film,TV")))))))
+
+    assert_csdl_equal(expected, sexp)
+  end
+
   def test_empty_on_statement_scope
     expected = "{}"
     sexp = s(:statement_scope)

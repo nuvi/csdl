@@ -164,6 +164,16 @@ module CSDL
       logically_join_nodes("OR", node.children)
     end
 
+    # Process all child nodes. Useful for grouping child nodes without any syntax introduction.
+    #
+    # @see InteractionFilterProcessor#_return
+    # @see InteractionFilterProcessor#tag
+    # @see InteractionFilterProcessor#tag_tree
+    #
+    def on_root(node)
+      process_all(node.children).join(" ")
+    end
+
     # Wrap the stringified terminal value in quotes.
     #
     # @example
