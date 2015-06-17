@@ -66,7 +66,7 @@ module CSDL
   #   CSDL.operator?("contains") # => true
   #   CSDL.operator?(">=") # => true
   #
-  # @param target_name [String] The name of the target.
+  # @param operator [String] The name of the target.
   #
   # @return [Boolean] Whether or not the value is a valid CSDL Operator.
   #

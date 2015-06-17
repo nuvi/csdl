@@ -1,6 +1,6 @@
 module CSDL
 
-  # {Builder} is a class used to produce {AST::Node} objects built to be processed
+  # {Builder} is a class used to produce {http://www.rubydoc.info/gems/ast/AST/Node AST::Node} objects built to be processed
   # by any one of {Processor}, {InteractionFilterProcessor}, or {QueryFilterProcessor}.
   #
   # @example
@@ -94,11 +94,13 @@ module CSDL
 
     # Wrap child nodes in a return statement scope.
     #
+    # @note The base {Processor} will not process return statement nodes, use {InteractionFilterProcessor} instead.
+    #
     # @example
     #   nodes = CSDL::Builder.new._return do
     #     filter("fb.content", :contains, "this is a string")
     #   end
-    #   CSDL::Processor.new.process(nodes) # => 'return {fb.content contains "this is a string"}'
+    #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'return {fb.content contains "this is a string"}'
     #
     # @param block [Proc] Block to return child nodes to apply to a :statement_scope node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node.
@@ -260,7 +262,7 @@ module CSDL
     #   nodes = CSDL::Builder.new.statement_scope do
     #     filter("fb.content", :contains, "this is a string")
     #   end
-    #   CSDL::Processor.new.process(nodes) # => '{fb.content contains "this is a string"}'
+    #   CSDL::InteractionFilterProcessor.new.process(nodes) # => '{fb.content contains "this is a string"}'
     #
     # @param block [Proc] Block to return child nodes to apply to this :statement_scope node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node.
@@ -277,11 +279,13 @@ module CSDL
 
     # Wrap child nodes in a VEDO tag classification.
     #
+    # @note The base {Processor} will not process tag nodes, use {InteractionFilterProcessor} instead.
+    #
     # @example
     #   nodes = CSDL::Builder.new.tag("MyTag") do
     #     filter("fb.content", :contains, "this is a string")
     #   end
-    #   CSDL::Processor.new.process(nodes) # => 'tag "MyTag" {fb.content contains "this is a string"}'
+    #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag "MyTag" {fb.content contains "this is a string"}'
     #
     # @param tag_class [#to_s] The tag classification.
     # @param block [Proc] Block to return child nodes to apply to a :statement_scope node nested under the :tag node. Block is evaluated against the builder instance.
@@ -301,11 +305,13 @@ module CSDL
 
     # Wrap child nodes in a VEDO tag classification tree.
     #
+    # @note The base {Processor} will not process tag_tree nodes, use {InteractionFilterProcessor} instead.
+    #
     # @example
     #   nodes = CSDL::Builder.new.tag_tree(%w(foo bar), "MyTag") do
     #     filter("fb.content", :contains, "this is a string")
     #   end
-    #   CSDL::Processor.new.process(nodes) # => 'tag.foo.bar "MyTag" {fb.content contains "this is a string"}'
+    #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag.foo.bar "MyTag" {fb.content contains "this is a string"}'
     #
     # @param tag_nodes [Array<#to_s>] List of classification namespaces.
     # @param tag_class [#to_s] The tag classification.

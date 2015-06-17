@@ -1,4 +1,15 @@
 module CSDL
+
+  # {InteractionFilterProcessor} is a class that inherits from {Processor}, providing additional methods
+  # for building CSDL specifically for Interaction Filters.
+  #
+  # Additional DSL methods provide the return statement, curly brace scopes (statement scopes), and VEDO tagging.
+  #
+  # @see Builder
+  # @see http://www.rubydoc.info/gems/ast/AST/Processor AST::Processor
+  # @see http://www.rubydoc.info/gems/ast/AST/Node AST::Node
+  # @see http://dev.datasift.com/docs/csdl DataSift CSDL Language Documentation
+  #
   class InteractionFilterProcessor < ::CSDL::Processor
 
     def on_return(node)
