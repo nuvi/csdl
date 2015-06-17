@@ -313,24 +313,24 @@ module CSDL
     #   end
     #   CSDL::InteractionFilterProcessor.new.process(nodes) # => 'tag.foo.bar "MyTag" {fb.content contains "this is a string"}'
     #
-    # @param tag_nodes [Array<#to_s>] List of classification namespaces.
+    # @param tag_namespaces [Array<#to_s>] List of classification namespaces.
     # @param tag_class [#to_s] The tag classification.
     # @param block [Proc] Block to return child nodes to apply to a :statement_scope node nested under the :tag node. Block is evaluated against the builder instance.
     # @yieldreturn [AST::Node, Array<AST::Node>] An AST node or array of AST nodes to be wrapped by a :statement_scope node, to be a child of the returned :tag node.
     #
-    # @return [AST::Node] An AST :tag node with a :tag_nodes child node, :tag_class child node, and :statement_scope child node.
+    # @return [AST::Node] An AST :tag node with a :tag_namespaces child node, :tag_class child node, and :statement_scope child node.
     #
     # @see #statement_scope
     # @see #tag
     #
-    def tag_tree(tag_nodes, tag_class, &block)
-      tag_node_nodes = tag_nodes.map do |tag_node|
-        s(:tag_node, tag_node)
+    def tag_tree(tag_namespaces, tag_class, &block)
+      tag_namespace_nodes = tag_namespaces.map do |tag_namespace|
+        s(:tag_namespace, tag_namespace)
       end
 
       s(:tag,
-        s(:tag_nodes,
-          *tag_node_nodes),
+        s(:tag_namespaces,
+          *tag_namespace_nodes),
         s(:tag_class,
           s(:string, tag_class)),
         statement_scope(&block))

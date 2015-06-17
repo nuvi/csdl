@@ -28,17 +28,19 @@ Or install it yourself as:
 
 Use the DSL provided by `CSDL::Builder` to produce an AST representation of your query, and use `CSDL::Processor` to turn your AST into a raw CSDL string.
 
+Be sure to read the [Processor](http://www.rubydoc.info/gems/csdl/CSDL/Processor) and [Processor](http://www.rubydoc.info/gems/csdl/CSDL/Builder) docs if you get stuck.
+
 Valid builder methods are:
 
 - `_and` - `AND`s two or more child statements together.
-- `_not` - Negates a `filter` statement.
+- `_not` - Negates a `condition` statement.
 - `_or` - `OR`s two or more child statements together.
 - `_return` - Creates a return statement with an implicit `statement_scope`.
-- `filter` - Builds a `target + operator + argument` group. Ensures `target` and `operator` are valid.
+- `condition` - Builds a `target + operator + argument` group. Ensures `target` and `operator` are valid.
 - `logical_group` - Create a parenthetical grouping for nested statements. Optionally takes a logical operator as the first argument since we commonly want to wrap OR'd or AND'd statements in a logical group.
 - `statement_scope` - Create a braced grouping for nested statements used by tag and return blocks.
-- `tag` - Builds a tag classifier (e.g. `tag "Desire" { ... }`).
 - `tag_tree` - Builds a tag tree classifier (e.g. `tag.movies "Video" { ... }`).
+- `tag` - Builds a tag classifier (e.g. `tag "Desire" { ... }`).
 
 Methods prefixed with "\_" are to avoid ruby keyword collisions.
 
@@ -49,20 +51,20 @@ builder = ::CSDL::Builder.new._or do
       [
         logical_group(:or) {
           [
-            filter("fb.content", :contains_any, "ebola"),
-            filter("fb.parent.content", :contains_any, "ebola")
+            condition("fb.content", :contains_any, "ebola"),
+            condition("fb.parent.content", :contains_any, "ebola")
           ]
         },
         _not("fb.content", :contains_any, "government,politics"),
-        filter("fb.author.country_code", :in, "GB")
+        condition("fb.author.country_code", :in, "GB")
       ]
     },
     logical_group(:and) {
       [
         logical_group(:or) {
           [
-            filter("fb.content", :contains_any, "malta,malta island,#malta"),
-            filter("fb.parent.content", :contains_any, "malta,malta island,#malta")
+            condition("fb.content", :contains_any, "malta,malta island,#malta"),
+            condition("fb.parent.content", :contains_any, "malta,malta island,#malta")
           ]
         },
         _not("fb.content", :contains_any, "vacation,poker awards")
@@ -89,12 +91,12 @@ Builder...
     (and
       (logical_group
         (or
-          (filter
+          (condition
             (target "fb.content")
             (operator :contains_any)
             (argument
               (string "ebola")))
-          (filter
+          (condition
             (target "fb.parent.content")
             (operator :contains_any)
             (argument
@@ -104,7 +106,7 @@ Builder...
         (operator :contains_any)
         (argument
           (string "government,politics")))
-      (filter
+      (condition
         (target "fb.author.country_code")
         (operator :in)
         (argument
@@ -113,12 +115,12 @@ Builder...
     (and
       (logical_group
         (or
-          (filter
+          (condition
             (target "fb.content")
             (operator :contains_any)
             (argument
               (string "malta,malta island,#malta")))
-          (filter
+          (condition
             (target "fb.parent.content")
             (operator :contains_any)
             (argument

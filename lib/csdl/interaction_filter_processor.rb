@@ -77,7 +77,7 @@ module CSDL
       "{" + process_all(node.children).join(" ") + "}"
     end
 
-    # Process :tag node with it's child nodes :tag_nodes (optional), :tag_class, and :statement_scope.
+    # Process :tag node with it's child nodes :tag_namespaces (optional), :tag_class, and :statement_scope.
     #
     # @example Tag Classification
     #   node = s(:tag,
@@ -89,10 +89,10 @@ module CSDL
     #
     # @example Tag Tree Classification
     #   node = s(:tag,
-    #           s(:tag_nodes,
-    #            s(:tag_node, "foo"),
-    #            s(:tag_node, "bar"),
-    #            s(:tag_node, "baz")),
+    #           s(:tag_namespaces,
+    #            s(:tag_namespace, "foo"),
+    #            s(:tag_namespace, "bar"),
+    #            s(:tag_namespace, "baz")),
     #           s(:tag_class,
     #            s(:string, "MyTag")),
     #           s(:statement_scope,
@@ -103,11 +103,11 @@ module CSDL
     #
     # @return [String] The tag classifier raw CSDL.
     #
-    # @raise [MissingTagClassError] When we don't have a first-level :tag_nodes child.
+    # @raise [MissingTagClassError] When we don't have a first-level :tag_namespaces child.
     # @raise [MissingTagStatementScopeError] When we don't have a first-level :statement_scope child.
     #
     def on_tag(node)
-      tag_nodes       = node.children.find { |child| child.type == :tag_nodes }
+      tag_namespaces       = node.children.find { |child| child.type == :tag_namespaces }
       tag_class       = node.children.find { |child| child.type == :tag_class }
       statement_scope = node.children.find { |child| child.type == :statement_scope }
 
@@ -120,8 +120,8 @@ module CSDL
       end
 
       tag_namespace = "tag"
-      unless tag_nodes.nil?
-        tag_namespace += process(tag_nodes)
+      unless tag_namespaces.nil?
+        tag_namespace += process(tag_namespaces)
       end
 
       children = [tag_namespace] + process_all([ tag_class, statement_scope ])
@@ -140,41 +140,41 @@ module CSDL
       process(node.children.first)
     end
 
-    # Process the terminal value of the :tag_node node.
+    # Process the terminal value of the :tag_namespace node.
     #
-    # @param node [AST::Node] The :tag_node node to be processed.
+    # @param node [AST::Node] The :tag_namespace node to be processed.
     #
     # @return [String] Terminal value as a string.
     #
-    # @see #on_tag_nodes
+    # @see #on_tag_namespaces
     #
-    def on_tag_node(node)
+    def on_tag_namespace(node)
       node.children.first.to_s
     end
 
-    # Process the :tag_node child nodes of a :tag_nodes node.
+    # Process the :tag_namespace child nodes of a :tag_namespaces node.
     #
     # @example
-    #   node = s(:tag_nodes,
-    #           s(:tag_node, "foo"),
-    #           s(:tag_node, "bar"),
-    #           s(:tag_node, "baz"))
+    #   node = s(:tag_namespaces,
+    #           s(:tag_namespace, "foo"),
+    #           s(:tag_namespace, "bar"),
+    #           s(:tag_namespace, "baz"))
     #   CSDL::InteractionFilterProcessor.new.process(node) # => '.foo.bar.baz'
     #
-    # @param node [AST::Node] The :tag_nodes node to be processed.
+    # @param node [AST::Node] The :tag_namespaces node to be processed.
     #
     # @return [String] Dot-delimited tag node namespace.
     #
-    # @raise [MissingTagNodesError] When there aren't any first-level :tag_node child nodes.
+    # @raise [MissingTagNodesError] When there aren't any first-level :tag_namespace child nodes.
     #
-    def on_tag_nodes(node)
-      child_tag_nodes = node.children.select { |child| child.type == :tag_node }
+    def on_tag_namespaces(node)
+      child_tag_namespaces = node.children.select { |child| child.type == :tag_namespace }
 
-      if child_tag_nodes.empty?
-        fail ::CSDL::MissingTagNodesError, "Invalid CSDL AST: A :tag_nodes node must have at least one :tag_node child"
+      if child_tag_namespaces.empty?
+        fail ::CSDL::MissingTagNodesError, "Invalid CSDL AST: A :tag_namespaces node must have at least one :tag_namespace child"
       end
 
-      "." + process_all(child_tag_nodes).join(".")
+      "." + process_all(child_tag_namespaces).join(".")
     end
 
     # Raises an {InvalidInteractionTargetError} if the target isn't a valid CSDL target for interaction filters. Will

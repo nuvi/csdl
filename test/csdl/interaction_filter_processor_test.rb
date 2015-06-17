@@ -40,8 +40,8 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     expected = 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.category in "Movie,Film,TV"}'
     sexp = s(:root,
                  s(:tag,
-                   s(:tag_nodes,
-                     s(:tag_node, "movies")),
+                   s(:tag_namespaces,
+                     s(:tag_namespace, "movies")),
                    s(:tag_class,
                      s(:string, "Video")),
                    s(:statement_scope,
@@ -51,8 +51,8 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
                        s(:argument,
                          s(:string, "youtube.com,vimeo.com"))))),
                  s(:tag,
-                   s(:tag_nodes,
-                     s(:tag_node, "movies")),
+                   s(:tag_namespaces,
+                     s(:tag_namespace, "movies")),
                    s(:tag_class,
                      s(:string, "Social Networks")),
                    s(:statement_scope,
@@ -139,17 +139,17 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_on_tag_nodes
+  def test_on_tag_namespaces
     expected = %q{.foo.bar}
-    sexp = s(:tag_nodes,
-             s(:tag_node, "foo"),
-             s(:tag_node, "bar"))
+    sexp = s(:tag_namespaces,
+             s(:tag_namespace, "foo"),
+             s(:tag_namespace, "bar"))
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_on_tag_nodes_without_tag_node_children
+  def test_on_tag_namespaces_without_tag_namespace_children
     assert_raises(::CSDL::MissingTagNodesError) do
-      sexp = s(:tag_nodes,
+      sexp = s(:tag_namespaces,
               s(:string, "foo"))
       ::CSDL::InteractionFilterProcessor.new.process(sexp)
     end
@@ -158,9 +158,9 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
   def test_on_tag_with_tree_nodes
     expected = %q{tag.foo.bar "MyTag" {"baz"}}
     sexp = s(:tag,
-             s(:tag_nodes,
-               s(:tag_node, "foo"),
-               s(:tag_node, "bar")),
+             s(:tag_namespaces,
+               s(:tag_namespace, "foo"),
+               s(:tag_namespace, "bar")),
              s(:tag_class,
                s(:string, "MyTag")),
              s(:statement_scope,
