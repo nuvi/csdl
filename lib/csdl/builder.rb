@@ -39,7 +39,14 @@ module CSDL
     # @see #logical_group
     #
     def _and(&block)
-      s(:and, *__one_or_more_child_nodes(&block))
+      children = __one_or_more_child_nodes(&block)
+      if children.empty?
+        nil
+      elsif children.size == 1
+        children.first
+      else
+        s(:and, *children)
+      end
     end
 
     # Negate a condition. Analogous to {#condition} with NOT prepended to the condition.
@@ -89,7 +96,14 @@ module CSDL
     # @see #logical_group
     #
     def _or(&block)
-      s(:or, *__one_or_more_child_nodes(&block))
+      children = __one_or_more_child_nodes(&block)
+      if children.empty?
+        nil
+      elsif children.size == 1
+        children.first
+      else
+        s(:or, *children)
+      end
     end
 
     # Wrap child nodes in a return statement scope.
@@ -215,10 +229,13 @@ module CSDL
     # @see #_or
     #
     def logical_group(logical_operator = nil, &block)
+      children = __one_or_more_child_nodes(&block)
+      return nil if children.empty?
+
       if logical_operator.nil?
-        s(:logical_group, *__one_or_more_child_nodes(&block))
+        s(:logical_group, *children)
       else
-        s(:logical_group, s(logical_operator, *__one_or_more_child_nodes(&block)))
+        s(:logical_group, s(logical_operator, *children))
       end
     end
 
@@ -251,7 +268,12 @@ module CSDL
     # @see #tag_tree
     #
     def root(&block)
-      s(:root, *__one_or_more_child_nodes(&block))
+      children = __one_or_more_child_nodes(&block)
+      if children.empty?
+        nil
+      else
+        s(:root, *children)
+      end
     end
 
     # Wrap child nodes in braces. @note Generally not useful on its own, see {#_return}, {#tag}, or {#tag_tree} usage.
@@ -274,7 +296,12 @@ module CSDL
     # @see #tag_tree
     #
     def statement_scope(&block)
-      s(:statement_scope, *__one_or_more_child_nodes(&block))
+      children = __one_or_more_child_nodes(&block)
+      if children.empty?
+        nil
+      else
+        s(:statement_scope, *children)
+      end
     end
 
     # Wrap child nodes in a VEDO tag classification.
@@ -340,7 +367,7 @@ module CSDL
 
     def __one_or_more_child_nodes(&block)
       children = instance_eval(&block)
-      [ children ].flatten
+      [ children ].flatten.compact
     end
 
   end
