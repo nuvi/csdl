@@ -240,6 +240,27 @@ class BuilderTest < ::MiniTest::Test
     assert_equal(expected, actual)
   end
 
+  def test_or_logical_group_0_children
+    expected = nil
+    actual = ::CSDL::Builder.new.logical_group(:or) {}
+    assert_equal(expected, actual)
+  end
+
+  def test_or_logical_group_1_child
+    expected = s(:logical_group,
+                   s(:condition,
+                     s(:target, "this"),
+                     s(:operator, "is"),
+                     s(:argument,
+                       s(:string, "first"))))
+
+    actual = ::CSDL::Builder.new.logical_group(:or) do
+      condition("this", "is", "first")
+    end
+
+    assert_equal(expected, actual)
+  end
+
   def test_or_logical_group
     expected = s(:logical_group,
                  s(:or,
@@ -326,6 +347,28 @@ class BuilderTest < ::MiniTest::Test
         condition("this", "is", "first"),
         condition("this", "is", "second")
       ]
+    end
+
+    assert_equal(expected, actual)
+  end
+
+  def test_and_logical_group_0_children
+    expected = nil
+    actual = ::CSDL::Builder.new.logical_group(:and) {}
+
+    assert_equal(expected, actual)
+  end
+
+  def test_and_logical_group_1_child
+    expected = s(:logical_group,
+                 s(:condition,
+                   s(:target, "this"),
+                   s(:operator, "is"),
+                   s(:argument,
+                     s(:string, "first"))))
+
+    actual = ::CSDL::Builder.new.logical_group(:and) do
+      condition("this", "is", "first")
     end
 
     assert_equal(expected, actual)

@@ -230,9 +230,10 @@ module CSDL
     #
     def logical_group(logical_operator = nil, &block)
       children = __one_or_more_child_nodes(&block)
-      return nil if children.empty?
 
-      if logical_operator.nil?
+      if children.empty?
+        nil
+      elsif logical_operator.nil? || children.size == 1
         s(:logical_group, *children)
       else
         s(:logical_group, s(logical_operator, *children))
