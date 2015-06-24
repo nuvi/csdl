@@ -72,8 +72,8 @@ module CSDL
     [ "interaction.ml.categories"         , false , true  , true  ] ,
     [ "interaction.raw_content"           , true  , false , true  ] ,
     [ "interaction.subtype"               , true  , true  , true  ] ,
-    [ "interaction.tag_tree"              , false , true  , false ] ,
-    [ "interaction.tags"                  , false , true  , true  ] ,
+    [ "interaction.tags"                  , false , true  , false ] ,
+    [ "interaction.tag_tree"              , false , true  , true  ] ,
     [ "links.code"                        , true  , true  , true  ] ,
     [ "links.domain"                      , true  , true  , true  ] ,
     [ "links.normalized_url"              , true  , true  , true  ] ,
@@ -141,12 +141,15 @@ module CSDL
   #   CSDL.query_target?("fb.topics.website") # => false
   #   CSDL.query_target?("fb.topic_ids") # => true
   #
+  # @example Verifying an interaction.tag_tree target
+  #   CSDL.query_target?("interaction.tag_tree.foo") # => true
+  #
   # @param target_name [String] The name of the target.
   #
   # @return [Boolean] Whether or not the value is a valid CSDL Query Filter Target.
   #
   def self.query_target?(target_name)
-    QUERY_TARGETS.key?(target_name)
+    QUERY_TARGETS.key?(target_name) || target_name =~ /^interaction\.tag_tree\..+$/
   end
 
 end

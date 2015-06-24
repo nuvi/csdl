@@ -16,6 +16,10 @@ class QueryFilterProcessorTest < ::MiniTest::Test
     end
   end
 
+  def test_valid_tag_tree_target
+    assert(CSDL::QueryFilterProcessor.new.process(s(:target, "interaction.tag_tree.foo")))
+  end
+
 end
 
 
