@@ -4,7 +4,7 @@ class BuilderTest < ::MiniTest::Test
   include ::AST::Sexp
 
   def test_root_0_children
-    expected = s(:root, nil)
+    expected = nil
     actual = ::CSDL::Builder.new.root {}
     assert_equal(expected, actual)
   end
@@ -110,7 +110,7 @@ class BuilderTest < ::MiniTest::Test
   end
 
   def test_statement_scope_0_children
-    expected = s(:statement_scope, nil)
+    expected = nil
     actual = ::CSDL::Builder.new.statement_scope {}
     assert_equal(expected, actual)
   end
@@ -154,7 +154,7 @@ class BuilderTest < ::MiniTest::Test
   end
 
   def test_logical_group_0_children
-    expected = s(:logical_group, nil)
+    expected = nil
     actual = ::CSDL::Builder.new.logical_group {}
     assert_equal(expected, actual)
   end
@@ -198,18 +198,17 @@ class BuilderTest < ::MiniTest::Test
   end
 
   def test_or_0_children
-    expected = s(:or, nil)
+    expected = nil
     actual = ::CSDL::Builder.new._or {}
     assert_equal(expected, actual)
   end
 
-  def test_or_1_child
-    expected = s(:or,
-                 s(:condition,
-                  s(:target, "foo"),
-                  s(:operator, "bar"),
-                  s(:argument,
-                    s(:string, "baz"))))
+  def test_or_1_child_does_not_wrap_in_or_node
+    expected = s(:condition,
+                 s(:target, "foo"),
+                 s(:operator, "bar"),
+                 s(:argument,
+                   s(:string, "baz")))
 
     actual = ::CSDL::Builder.new._or do
       condition("foo", "bar", "baz")
@@ -266,18 +265,17 @@ class BuilderTest < ::MiniTest::Test
   end
 
   def test_and_0_children
-    expected = s(:and, nil)
+    expected = nil
     actual = ::CSDL::Builder.new._and {}
     assert_equal(expected, actual)
   end
 
-  def test_and_1_child
-    expected = s(:and,
-                 s(:condition,
-                  s(:target, "foo"),
-                  s(:operator, "bar"),
-                  s(:argument,
-                    s(:string, "baz"))))
+  def test_and_1_child_does_not_wrap_in_and_node
+    expected = s(:condition,
+                 s(:target, "foo"),
+                 s(:operator, "bar"),
+                 s(:argument,
+                   s(:string, "baz")))
 
     actual = ::CSDL::Builder.new._and do
       condition("foo", "bar", "baz")
