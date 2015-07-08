@@ -164,6 +164,22 @@ module CSDL
       logically_join_nodes("OR", node.children)
     end
 
+    # Process :raw nodes.
+    #
+    # @example
+    #   node = s(:raw, %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})
+    #   CSDL::Processor.new.process(node) # => 'fb.content contains_any "foo" OR fb.parent.content contains_any "foo"'
+    #
+    # @param node [AST::Node] The :raw node to be processed.
+    #
+    # @return [String] The first child node as a string.
+    #
+    # @todo Raise if the node doesn't have any children.
+    #
+    def on_raw(node)
+      node.children.first.to_s
+    end
+
     # Process all child nodes. Useful for grouping child nodes without any syntax introduction.
     #
     # @see InteractionFilterProcessor#_return

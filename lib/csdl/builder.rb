@@ -240,6 +240,30 @@ module CSDL
       end
     end
 
+    # Create a node to store raw CSDL.
+    # @note this method will not implicitly wrap the raw CSDL in any grouping or scope.
+    #
+    # @example
+    #   node = CSDL::Builder.new.raw(%q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})
+    #   CSDL::Processor.new.process(node) # => %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"}
+    #
+    # @example Using with other generated nodes (e.g. condition)
+    #   nodes = CSDL::Builder.new._or do
+    #     [
+    #       condition("fb.type", :exists),
+    #       logical_group { raw(%q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"}) }
+    #     ]
+    #   end
+    #   CSDL::Processor.new.process(nodes) # => 'fb.type exists OR (fb.content contains_any "foo" OR fb.parent.content contains_any "foo")'
+    #
+    # @param raw_csdl [#to_s] The raw CSDL to store.
+    #
+    # @return [AST::Node] An AST :raw node.
+    #
+    def raw(raw_csdl)
+      s(:raw, raw_csdl.to_s)
+    end
+
     # Wrap child nodes in a root node. Useful for building CSDL with tagging and a return statement.
     #
     # @example

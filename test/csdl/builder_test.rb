@@ -418,6 +418,31 @@ class BuilderTest < ::MiniTest::Test
     assert_equal(expected, actual)
   end
 
+  def test_raw
+    expected = s(:raw, %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})
+    actual = ::CSDL::Builder.new.raw(%q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})
+
+    assert_equal(expected, actual)
+  end
+
+  def test_raw_combined_with_ast_nodes
+    expected = s(:or,
+                 s(:condition,
+                   s(:target, "fb.type"),
+                   s(:operator, :exists)),
+                 s(:logical_group,
+                   s(:raw, %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})))
+
+    actual = ::CSDL::Builder.new._or do
+      [
+        condition("fb.type", :exists),
+        logical_group { raw(%q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"}) }
+      ]
+    end
+
+    assert_equal(expected, actual)
+  end
+
   def test_return
     expected = s(:return,
                  s(:statement_scope,
