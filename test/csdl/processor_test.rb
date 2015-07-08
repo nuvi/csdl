@@ -195,6 +195,12 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
+  def test_raw_csdl
+    raw = %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"}
+    sexp = s(:raw, raw)
+    assert_csdl_equal(raw, sexp)
+  end
+
   private
 
   def assert_csdl_equal(expected, sexp)
