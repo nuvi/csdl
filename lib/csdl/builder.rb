@@ -241,27 +241,24 @@ module CSDL
     end
 
     # Create a node to store raw CSDL.
+    # @note this method will not implicitly wrap the raw CSDL in any grouping or scope.
     #
     # @example
     #   node = CSDL::Builder.new.raw(%q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})
     #   CSDL::Processor.new.process(node) # => %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"}
     #
-    # @example Multiple conditions ANDed together
-    #   nodes = CSDL::Builder.new._and do
+    # @example Using with other generated nodes (e.g. condition)
+    #   nodes = CSDL::Builder.new._or do
     #     [
-    #       condition("fb.content", :contains, "this is a string"),
-    #       condition("fb.parent.content", :contains, "this is a string"),
+    #       condition("fb.type", :exists),
+    #       logical_group { raw(%q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"}) }
     #     ]
     #   end
-    #   CSDL::Processor.new.process(nodes) # => 'fb.content contains "this is a string" AND fb.parent.content contains "this is a string"'
+    #   CSDL::Processor.new.process(nodes) # => 'fb.type exists OR (fb.content contains_any "foo" OR fb.parent.content contains_any "foo")'
     #
-    # @param target [#to_s] A valid Target specifier (see {CSDL::TARGETS}).
-    # @param operator [#to_s] A valid Operator specifier (see {CSDL::OPERATORS}).
-    # @param argument [String, Numeric, nil] The comparator value, if applicable for the given operator.
+    # @param raw_csdl [#to_s] The raw CSDL to store.
     #
-    # @return [AST::Node] An AST :condition node with child target, operator, and argument nodes.
-    #
-    # @see #_not
+    # @return [AST::Node] An AST :raw node.
     #
     def raw(raw_csdl)
       s(:raw, raw_csdl.to_s)
