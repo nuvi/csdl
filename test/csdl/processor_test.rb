@@ -195,10 +195,23 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
-  def test_raw_csdl
+  def test_raw
     raw = %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"}
     sexp = s(:raw, raw)
     assert_csdl_equal(raw, sexp)
+  end
+
+  def test_raw_grouped_with_other_conditions
+    expected = %q{fb.type exists OR (fb.content contains_any "foo" OR fb.parent.content contains_any "foo")}
+    sexp = s(:or,
+             s(:condition,
+               s(:target, "fb.type"),
+               s(:operator, :exists)),
+             s(:logical_group,
+               s(:raw, %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})))
+
+
+    assert_csdl_equal(expected, sexp)
   end
 
   private
