@@ -50,7 +50,7 @@ module CSDL
     # @return [String] The processed :statement_scope child node, prepended by the "return" keyword.
     #
     def on_return(node)
-      statement_scope = node.children.find { |child| child.type == :statement_scope }
+      statement_scope = node.children.compact.find { |child| child.type == :statement_scope }
 
       if statement_scope.nil?
         fail ::CSDL::MissingReturnStatementScopeError, "Invalid CSDL AST: return statment scope is missing"
@@ -74,7 +74,7 @@ module CSDL
     # @see #on_tag
     #
     def on_statement_scope(node)
-      "{" + process_all(node.children).join(" ") + "}"
+      "{" + process_all(node.children.compact).join(" ") + "}"
     end
 
     # Process :tag node with it's child nodes :tag_namespaces (optional), :tag_class, and :statement_scope.
@@ -107,9 +107,10 @@ module CSDL
     # @raise [MissingTagStatementScopeError] When we don't have a first-level :statement_scope child.
     #
     def on_tag(node)
-      tag_namespaces       = node.children.find { |child| child.type == :tag_namespaces }
-      tag_class       = node.children.find { |child| child.type == :tag_class }
-      statement_scope = node.children.find { |child| child.type == :statement_scope }
+      children = node.children.compact
+      tag_namespaces  = children.find { |child| child.type == :tag_namespaces }
+      tag_class       = children.find { |child| child.type == :tag_class }
+      statement_scope = children.find { |child| child.type == :statement_scope }
 
       if tag_class.nil?
         fail ::CSDL::MissingTagClassError, "Invalid CSDL AST: :tag node must have a :tag_class child node"
@@ -168,7 +169,7 @@ module CSDL
     # @raise [MissingTagNodesError] When there aren't any first-level :tag_namespace child nodes.
     #
     def on_tag_namespaces(node)
-      child_tag_namespaces = node.children.select { |child| child.type == :tag_namespace }
+      child_tag_namespaces = node.children.compact.select { |child| child.type == :tag_namespace }
 
       if child_tag_namespaces.empty?
         fail ::CSDL::MissingTagNodesError, "Invalid CSDL AST: A :tag_namespaces node must have at least one :tag_namespace child"
