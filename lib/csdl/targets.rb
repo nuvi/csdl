@@ -78,22 +78,106 @@ module CSDL
     MEDIA_TYPES = %w( link note photo post reshare video).freeze
 
     REGIONS_BY_COUNTRY = {
-      "Austria"        => [],
-      "Belgium"        => [],
-      "Denmark"        => [],
-      "Finland"        => [],
-      "France"         => [],
-      "Germany"        => [],
-      "Iceland"        => [],
-      "Ireland"        => [],
-      "Italy"          => [],
-      "Luxembourg"     => [],
-      "Netherlands"    => [],
-      "Norway"         => [],
-      "Portugal"       => [],
-      "Spain"          => [],
-      "Sweden"         => [],
-      "Switzerland"    => [],
+      "Austria" => [
+        "Burgenland" , "Kärnten" , "Niederösterreich" , "Oberösterreich" , "Salzburg" ,
+        "Steiermark" , "Tirol"   , "Vorarlberg"       , "Wien"
+      ].freeze,
+
+      "Belgium" => [
+        "Région De Bruxelles-Capitale"
+      ].freeze,
+
+      "Denmark" => [
+        "Arhus", "Nordjylland"
+      ].freeze,
+
+      "Finland" => [
+        "Åland", "Lapland"
+      ].freeze,
+
+      "France" => [
+        "Alsace"                     , "Aquitaine"        , "Auvergne"        , "Basse-Normandie"   ,
+        "Bourgogne"                  , "Bretagne"         , "Centre"          , "Champagne-Ardenne" ,
+        "Corse"                      , "Franche-Comté"    , "Haute-Normandie" , "Île-de-France"     ,
+        "Languedoc-Roussillon"       , "Limousin"         , "Lorraine"        , "Midi-Pyrénées"     ,
+        "Nord-Pas-de-Calais"         , "Pays de la Loire" , "Picardie"        , "Poitou-Charentes"  ,
+        "Provence-Alpes-Côte d'Azur" , "Rhône-Alpes"
+      ].freeze,
+
+      "Germany" => [
+        "Baden-Württemberg" , "Bayern"              , "Berlin"             , "Brandenburg"            ,
+        "Bremen"            , "Hamburg"             , "Hessen"             , "Mecklenburg-Vorpommern" ,
+        "Niedersachsen"     , "Nordrhein-Westfalen" , "Rheinland-Pfalz"    , "Saarland"               ,
+        "Sachsen"           , "Sachsen-Anhalt"      , "Schleswig-Holstein" , "Thüringen"
+      ].freeze,
+
+      "Iceland" => [].freeze,
+
+      "Ireland" => [
+        "Carlow"  , "Cavan"     , "Clare"     , "Cork"      , "Donegal"   ,
+        "Dublin"  , "Galway"    , "Kerry"     , "Kildare"   , "Kilkenny"  ,
+        "Laois"   , "Leitrim"   , "Limerick"  , "Longford"  , "Louth"     ,
+        "Mayo"    , "Meath"     , "Monaghan"  , "Offaly"    , "Roscommon" ,
+        "Sligo"   , "Tipperary" , "Waterford" , "Westmeath" , "Wexford"   ,
+        "Wicklow"
+      ].freeze,
+
+      "Italy" => [
+        "Abruzzo"               , "Basilicata"          , "Calabria" , "Campania"      , "Emilia-Romagna" ,
+        "Friuli-Venezia Giulia" , "Lazio"               , "Liguria"  , "Lombardia"     , "Marche"         ,
+        "Molise"                , "Piemonte"            , "Puglia"   , "Sardegna"      , "Sicilia"        ,
+        "Toscana"               , "Trentino-Alto Adige" , "Umbria"   , "Valle d'Aosta" , "Veneto"
+      ].freeze,
+
+      "Luxembourg" => [
+        "Diekirch", "Grevenmacher", "Luxembourg"
+      ].freeze,
+
+      "Netherlands" => [
+        "Drenthe" , "Flevoland"     , "Friesland"     , "Gelderland" , "Groningen" ,
+        "Limburg" , "Noord-Brabant" , "Noord-Holland" , "Overijssel" , "Utrecht"   ,
+        "Zeeland" , "Zuid-Holland"
+      ].freeze,
+
+      "Norway" => [
+        "Akershus" , "Aust-Agder"       , "Buskerud"        , "Finnmark"       ,
+        "Hedmark"  , "Hordaland"        , "Møre og Romsdal" , "Nord-Trøndelag" ,
+        "Nordland" , "Oppland"          , "Oslo"            , "Østfold"        ,
+        "Rogaland" , "Sogn og Fjordane" , "Sør-Trøndelag"   , "Telemark"       ,
+        "Troms"    , "Vest-Agder"       , "Vestfold"
+      ].freeze,
+
+      "Portugal" => [
+        "Aveiro"         , "Azores"  , "Beja"             , "Braga"      , "Braganca" ,
+        "Castelo Branco" , "Coimbra" , "Evora"            , "Faro"       , "Guarda"   ,
+        "Leiria"         , "Lisboa"  , "Madeira"          , "Portalegre" , "Porto"    ,
+        "Santarem"       , "Setubal" , "Viana do Castelo" , "Vila Real"  , "Viseu"
+      ].freeze,
+
+      "Spain" => [
+        "Andalucía"            , "Aragón"             , "Asturias" , "Cantabria"           ,
+        "Castilla y Leon"      , "Castilla-La Mancha" , "Cataluña" , "Comunidad de Madrid" ,
+        "Comunidad Valenciana" , "Extremadura"        , "Galicia"  , "Islas Baleares"      ,
+        "Islas Canarias"       , "La Rioja"           , "Murcia"   , "Navarra"
+      ].freeze,
+
+      "Sweden" => [
+        "Blekinge Län"    , "Dalarnas Län"      , "Gävleborgs Län"      , "Gotlands Län"      ,
+        "Hallands Län"    , "Jämtlands Län"     , "Jönköpings Län"      , "Kalmar Län"        ,
+        "Kronobergs Län"  , "Norrbottens Län"   , "Örebro Län"          , "Östergötlands Län" ,
+        "Skåne Län"       , "Södermanlands Län" , "Stockholms Län"      , "Uppsala Län"       ,
+        "Värmlands Län"   , "Västerbottens Län" , "Västernorrlands Län" , "Västmanlands Län"  ,
+        "Västra Götaland"
+      ].freeze,
+
+      "Switzerland" => [
+        "Aargau"   , "Basel-Landschaft" , "Basel-Stadt" , "Bern"         ,
+        "Fribourg" , "Geneve"           , "Glarus"      , "Graubünden"   ,
+        "Jura"     , "Luzern"           , "Neuchâtel"   , "Schaffhausen" ,
+        "Schwyz"   , "Solothurn"        , "St. Gallen"  , "Thurgau"      ,
+        "Ticino"   , "Valais"           , "Vaud"        , "Zug"          ,
+        "Zürich"
+      ].freeze,
 
       "United Kingdom" => [
         "England", "Scotland", "Wales", "Northern Ireland"
