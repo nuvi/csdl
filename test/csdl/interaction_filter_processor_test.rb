@@ -85,7 +85,7 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
   end
 
   def test_on_statement_scope_with_condition
-    target = ::CSDL::TARGETS.keys.sample
+    target = ::CSDL::INTERACTION_TARGETS.keys.sample
     operator = ::CSDL::OPERATORS.keys.sample
     expected = %Q{{#{target} #{operator} "baz"}}
     sexp = s(:statement_scope,
