@@ -7,24 +7,61 @@ module CSDL
     AUTHOR_TYPES = %w( page user ).freeze
 
     COUNTRY_CODES_BY_COUNTRY = {
-      "Austria"        => "AT",
-      "Belgium"        => "BE",
-      "Denmark"        => "DK",
-      "Finland"        => "FI",
-      "France"         => "FR",
-      "Germany"        => "DE",
-      "Iceland"        => "IS",
-      "Ireland"        => "IE",
-      "Italy"          => "IT",
-      "Luxembourg"     => "LU",
-      "Netherlands"    => "NL",
-      "Norway"         => "NO",
-      "Portugal"       => "PT",
-      "Spain"          => "ES",
-      "Sweden"         => "SE",
-      "Switzerland"    => "CH",
+      "Austria" => "AT",
+      "Bahrain" => "BH",
+      "Belgium" => "BE",
+      "Bulgaria" => "BG",
+      "Croatia" => "HR",
+      "Cyprus" => "CY",
+      "Czech Republic" => "CZ",
+      "Denmark" => "DK",
+      "Egypt" => "EG",
+      "Estonia" => "EE",
+      "Finland" => "FI",
+      "France" => "FR",
+      "Germany" => "DE",
+      "Ghana" => "GH",
+      "Greece" => "GR",
+      "Hungary" => "HU",
+      "Iceland" => "IS",
+      "Iraq" => "IQ",
+      "Ireland" => "IE",
+      "Israel" => "IL",
+      "Italy" => "IT",
+      "Jordan" => "JO",
+      "Kenya" => "KE",
+      "Kuwait" => "KW",
+      "Latvia" => "LV",
+      "Lebanon" => "LB",
+      "Lithuania" => "LT",
+      "Luxembourg" => "LU",
+      "Macedonia, the former Yugoslav Republic of" => "MK",
+      "Malta" => "MT",
+      "Mauritius" => "MU",
+      "Morocco" => "MA",
+      "Netherlands" => "NL",
+      "Nigeria" => "NG",
+      "Norway" => "NO",
+      "Oman" => "OM",
+      "Palestinian territories" => "PS",
+      "Poland" => "PL",
+      "Portugal" => "PT",
+      "Qatar" => "QA",
+      "Romania" => "RO",
+      "Saudi Arabia" => "SA",
+      "Serbia" => "RS",
+      "Slovakia" => "SK",
+      "Slovenia" => "SI",
+      "South Africa" => "ZA",
+      "Spain" => "ES",
+      "Sweden" => "SE",
+      "Switzerland" => "CH",
+      "Tunisia" => "TN",
+      "Turkey" => "TR",
+      "Ukraine" => "UA",
+      "United Arab Emirates" => "AE",
       "United Kingdom" => "GB",
-      "United States"  => "US"
+      "United States" => "US",
     }.freeze
 
     COUNTRIES = COUNTRY_CODES_BY_COUNTRY.keys.freeze
@@ -75,7 +112,7 @@ module CSDL
 
     LANGUAGES = LANGUAGES_BY_LANGUAGE_CODE.values.freeze
 
-    MEDIA_TYPES = %w( link note photo post reshare video).freeze
+    MEDIA_TYPES = %w( link note photo post reshare video ).freeze
 
     REGIONS_BY_COUNTRY = {
       "Austria" => [
@@ -83,13 +120,27 @@ module CSDL
         "Steiermark" , "Tirol"   , "Vorarlberg"       , "Wien"
       ].freeze,
 
+      "Bahrain" => [],
+
       "Belgium" => [
         "Région De Bruxelles-Capitale"
       ].freeze,
 
+      "Bulgaria" => [],
+
+      "Croatia" => [],
+
+      "Cyprus" => [],
+
+      "Czech Republic" => [],
+
       "Denmark" => [
         "Arhus", "Nordjylland"
       ].freeze,
+
+      "Egypt" => [],
+
+      "Estonia" => [],
 
       "Finland" => [
         "Åland", "Lapland"
@@ -111,7 +162,15 @@ module CSDL
         "Sachsen"           , "Sachsen-Anhalt"      , "Schleswig-Holstein" , "Thüringen"
       ].freeze,
 
+      "Ghana" => [],
+
+      "Greece" => [],
+
+      "Hungary" => [],
+
       "Iceland" => [].freeze,
+
+      "Iraq" => [],
 
       "Ireland" => [
         "Carlow"  , "Cavan"     , "Clare"     , "Cork"      , "Donegal"   ,
@@ -122,6 +181,8 @@ module CSDL
         "Wicklow"
       ].freeze,
 
+      "Israel" => [],
+
       "Italy" => [
         "Abruzzo"               , "Basilicata"          , "Calabria" , "Campania"      , "Emilia-Romagna" ,
         "Friuli-Venezia Giulia" , "Lazio"               , "Liguria"  , "Lombardia"     , "Marche"         ,
@@ -129,15 +190,37 @@ module CSDL
         "Toscana"               , "Trentino-Alto Adige" , "Umbria"   , "Valle d'Aosta" , "Veneto"
       ].freeze,
 
+      "Jordan" => [],
+
+      "Kenya" => [],
+
+      "Kuwait" => [],
+
+      "Latvia" => [],
+
+      "Lebanon" => [],
+
+      "Lithuania" => [],
+
       "Luxembourg" => [
         "Diekirch", "Grevenmacher", "Luxembourg"
       ].freeze,
+
+      "Macedonia, the former Yugoslav Republic of" => [],
+
+      "Malta" => [],
+
+      "Mauritius" => [],
+
+      "Morocco" => [],
 
       "Netherlands" => [
         "Drenthe" , "Flevoland"     , "Friesland"     , "Gelderland" , "Groningen" ,
         "Limburg" , "Noord-Brabant" , "Noord-Holland" , "Overijssel" , "Utrecht"   ,
         "Zeeland" , "Zuid-Holland"
       ].freeze,
+
+      "Nigeria" => [],
 
       "Norway" => [
         "Akershus" , "Aust-Agder"       , "Buskerud"        , "Finnmark"       ,
@@ -147,12 +230,32 @@ module CSDL
         "Troms"    , "Vest-Agder"       , "Vestfold"
       ].freeze,
 
+      "Oman" => [],
+
+      "Palestinian territories" => [],
+
+      "Poland" => [],
+
       "Portugal" => [
         "Aveiro"         , "Azores"  , "Beja"             , "Braga"      , "Braganca" ,
         "Castelo Branco" , "Coimbra" , "Evora"            , "Faro"       , "Guarda"   ,
         "Leiria"         , "Lisboa"  , "Madeira"          , "Portalegre" , "Porto"    ,
         "Santarem"       , "Setubal" , "Viana do Castelo" , "Vila Real"  , "Viseu"
       ].freeze,
+
+      "Qatar" => [],
+
+      "Romania" => [],
+
+      "Saudi Arabia" => [],
+
+      "Serbia" => [],
+
+      "Slovakia" => [],
+
+      "Slovenia" => [],
+
+      "South Africa" => [],
 
       "Spain" => [
         "Andalucía"            , "Aragón"             , "Asturias" , "Cantabria"           ,
@@ -178,6 +281,14 @@ module CSDL
         "Ticino"   , "Valais"           , "Vaud"        , "Zug"          ,
         "Zürich"
       ].freeze,
+
+      "Tunisia" => [],
+
+      "Turkey" => [],
+
+      "Ukraine" => [],
+
+      "United Arab Emirates" => [],
 
       "United Kingdom" => [
         "England", "Scotland", "Wales", "Northern Ireland"
@@ -363,6 +474,7 @@ module CSDL
     [ "links.domain"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.normalized_url"              , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.url"                         , true  , true  , true  , :UNBOUNDED ]
+
   ]
 
   # All possible targets.
