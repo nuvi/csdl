@@ -14,6 +14,19 @@ module CSDL
         "Wien"
       ].freeze,
 
+      "Canada" => [
+        "Alberta",
+        "British Columbia",
+        "Manitoba",
+        "New Brunswick",
+        "Newfoundland",
+        "Nova Scotia",
+        "Ontario",
+        "Prince Edward Island",
+        "Quebec",
+        "Saskatchewan"
+      ],
+
       "Bahrain" => [
         "Al Muharraq"
       ].freeze,
@@ -369,6 +382,41 @@ module CSDL
         "Port Louis",
         "Riviere du Rempart"
       ].freeze,
+
+      "Mexico" => [
+        "Aguascalientes",
+        "Baja California",
+        "Baja California Sur",
+        "Campeche",
+        "Chiapas",
+        "Chihuahua",
+        "Coahuila de Zaragoza",
+        "Colima",
+        "Distrito Federal",
+        "Durango",
+        "Guanajuato",
+        "Guerrero",
+        "Hidalgo",
+        "Jalisco",
+        "Michoacán de Ocampo",
+        "Morelos",
+        "Nayarit",
+        "Nuevo León",
+        "Oaxaca",
+        "Puebla",
+        "Querétaro Arteaga",
+        "Quintana Roo",
+        "San Luis Potosi",
+        "Sinaloa",
+        "Sonora",
+        "State of Mexico",
+        "Tabasco",
+        "Tamaulipas",
+        "Tlaxcala",
+        "Veracruz",
+        "Yucatán",
+        "Zacatecas"
+      ],
 
       "Morocco" => [
         "Casablanca",

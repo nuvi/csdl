@@ -3,6 +3,7 @@ module CSDL
 
     COUNTRY_CODES_BY_COUNTRY = {
       "Austria" => "AT",
+      "Canada" => "CA",
       "Bahrain" => "BH",
       "Belgium" => "BE",
       "Bulgaria" => "BG",
@@ -33,6 +34,7 @@ module CSDL
       "Macedonia, the former Yugoslav Republic of" => "MK",
       "Malta" => "MT",
       "Mauritius" => "MU",
+      "Mexico" => "MX",
       "Morocco" => "MA",
       "Netherlands" => "NL",
       "Nigeria" => "NG",
