@@ -14,6 +14,10 @@ module CSDL
         "Wien"
       ].freeze,
 
+      "Bolivia" => [].freeze,
+
+      "Brazil" => [].freeze,
+
       "Canada" => [
         "Alberta",
         "British Columbia",
@@ -26,6 +30,14 @@ module CSDL
         "Quebec",
         "Saskatchewan"
       ],
+
+      "Chile" => [].freeze,
+
+      "Colombia" => [].freeze,
+
+      "Costa Rica" => [].freeze,
+
+      "Cuba" => [].freeze,
 
       "Bahrain" => [
         "Al Muharraq"
@@ -117,6 +129,10 @@ module CSDL
         "Nordjylland"
       ].freeze,
 
+      "Dominican Republic" => [].freeze,
+
+      "Ecuador" => [].freeze,
+
       "Egypt" => [
         "Ad Daqahliyah",
         "Al Bahr al Ahmar",
@@ -144,6 +160,8 @@ module CSDL
         "Shamal Sina'",
         "Suhaj"
       ].freeze,
+
+      "El Salvador" => [].freeze,
 
       "Estonia" => [
         "Harjumaa",
@@ -180,6 +198,8 @@ module CSDL
         "Rhône-Alpes"
       ].freeze,
 
+      "French Guiana" => [].freeze,
+
       "Germany" => [
         "Baden-Württemberg",
         "Bayern",
@@ -208,6 +228,14 @@ module CSDL
         "Attiki",
         "Thessaloniki"
       ].freeze,
+
+      "Guadeloupe" => [].freeze,
+
+      "Guatemala" => [].freeze,
+
+      "Haiti" => [].freeze,
+
+      "Honduras" => [].freeze,
 
       "Hungary" => [
         "Bacs-Kiskun",
@@ -374,6 +402,8 @@ module CSDL
       "Malta" => [
       ].freeze,
 
+      "Martinique" => [].freeze,
+
       "Mauritius" => [
         "Flacq",
         "Grand Port",
@@ -443,6 +473,8 @@ module CSDL
         "Zuid-Holland"
       ].freeze,
 
+      "Nicaragua" => [].freeze,
+
       "Nigeria" => [
         "Abia",
         "Akwa Ibom",
@@ -499,6 +531,12 @@ module CSDL
 
       "Palestinian territories" => [].freeze,
 
+      "Panama" => [].freeze,
+
+      "Paraguay" => [].freeze,
+
+      "Peru" => [].freeze,
+
       "Poland" => [
         "Dolnoslaskie",
         "Kujawsko-Pomorskie",
@@ -539,6 +577,8 @@ module CSDL
         "Vila Real",
         "Viseu"
       ].freeze,
+
+      "Puerto Rico" => [].freeze,
 
       "Qatar" => [
         "Ad Dawhah"
@@ -588,6 +628,10 @@ module CSDL
         "Vaslui",
         "Vrancea"
       ].freeze,
+
+      "Saint Barthelemy" => [].freeze,
+
+      "Saint Martin (French Part)" => [].freeze,
 
       "Saudi Arabia" => [
         "Al Jawf",
@@ -877,7 +921,12 @@ module CSDL
         "West Virginia",
         "Wisconsin",
         "Wyoming"
-      ].freeze
+      ].freeze,
+
+      "Uruguay" => [].freeze,
+
+      "Venezuela" => [].freeze
+
     }.freeze
 
     REGIONS = REGIONS_BY_COUNTRY.values.flatten.freeze
