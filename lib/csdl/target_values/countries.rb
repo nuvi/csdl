@@ -2,6 +2,7 @@ module CSDL
   module TargetValues
 
     COUNTRY_CODES_BY_COUNTRY = {
+      "Argentina" => "AR",
       "Austria" => "AT",
       "Bahrain" => "BH",
       "Belgium" => "BE",
