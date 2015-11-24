@@ -2,6 +2,19 @@ module CSDL
   module TargetValues
 
     REGIONS_BY_COUNTRY = {
+      "Argentina" => [
+        "Neuquén",
+        "Río Negro",
+        "Salta",
+        "San Juan",
+        "San Luis",
+        "Santa Cruz",
+        "Santa Fe",
+        "Santiago del Estero",
+        "Tierra del Fuego",
+        "Tucuman"
+      ].freeze,
+
       "Austria" => [
         "Burgenland",
         "Kärnten",
@@ -14,25 +27,49 @@ module CSDL
         "Wien"
       ].freeze,
 
-      "Canada" => [
-        "Alberta",
-        "British Columbia",
-        "Manitoba",
-        "New Brunswick",
-        "Newfoundland",
-        "Nova Scotia",
-        "Ontario",
-        "Prince Edward Island",
-        "Quebec",
-        "Saskatchewan"
-      ],
-
       "Bahrain" => [
         "Al Muharraq"
       ].freeze,
 
       "Belgium" => [
         "Région De Bruxelles-Capitale"
+      ].freeze,
+
+      "Bolivia" => [
+        "Chuquisaca",
+        "Cochabamba",
+        "El Beni",
+        "Santa Cruz"
+      ].freeze,
+
+      "Brazil" => [
+        "Acre",
+        "Alagoas",
+        "Amapa",
+        "Amazonas",
+        "Bahia",
+        "Ceara",
+        "Distrito Federal",
+        "Espirito Santo",
+        "Goias",
+        "Maranhao",
+        "Mato Grosso",
+        "Mato Grosso do Sul",
+        "Minas Gerais",
+        "Para",
+        "Paraiba",
+        "Parana",
+        "Pernambuco",
+        "Piaui",
+        "Rio de Janeiro",
+        "Rio Grande do Norte",
+        "Rio Grande do Sul",
+        "Rondonia",
+        "Roraima",
+        "Santa Catarina",
+        "São Paulo",
+        "Sergipe",
+        "Tocantins",
       ].freeze,
 
       "Bulgaria" => [
@@ -66,6 +103,69 @@ module CSDL
         "Yambol"
       ].freeze,
 
+      "Canada" => [
+        "Alberta",
+        "British Columbia",
+        "Manitoba",
+        "New Brunswick",
+        "Newfoundland",
+        "Nova Scotia",
+        "Ontario",
+        "Prince Edward Island",
+        "Quebec",
+        "Saskatchewan"
+      ],
+
+      "Chile" => [
+        "Antofagasta",
+        "Araucania",
+        "Atacama",
+        "Bio-Bio",
+        "Coquimbo",
+        "Libertador General Bernardo O'Higgins",
+        "Los Lagos",
+        "Magallanes y de la Antartica Chilena",
+        "Maule",
+        "Region Metropolitana",
+        "Tarapaca",
+        "Valparaiso"
+      ].freeze,
+
+      "Colombia" => [
+        "Antioquia",
+        "Atlantico",
+        "Bolivar",
+        "Boyaca",
+        "Caldas",
+        "Casanare",
+        "Cauca",
+        "Cesar",
+        "Cordoba",
+        "Cundinamarca",
+        "Distrito Especial",
+        "Huila",
+        "La Guajira",
+        "Magdalena",
+        "Meta",
+        "Narino",
+        "Norte de Santander",
+        "Quindio",
+        "Risaralda",
+        "Santander",
+        "Tolima",
+        "Valle del Cauca"
+      ].freeze,
+
+      "Costa Rica" => [
+        "Alajuela",
+        "Cartago",
+        "Guanacaste",
+        "Heredia",
+        "Limon",
+        "Puntarenas",
+        "San Jose"
+      ].freeze,
+
       "Croatia" => [
         "Bjelovarsko-Bilogorska",
         "Brodsko-Posavska",
@@ -85,6 +185,10 @@ module CSDL
         "Vukovarsko-Srijemska",
         "Zadarska",
         "Zagrebacka"
+      ].freeze,
+
+      "Cuba" => [
+        "La Habana"
       ].freeze,
 
       "Cyprus" => [
@@ -117,6 +221,33 @@ module CSDL
         "Nordjylland"
       ].freeze,
 
+      "Dominican Republic" => [
+        "Duarte",
+        "Espaillat",
+        "La Altagracia",
+        "La Romana",
+        "La Vega",
+        "Monsenor Nouel",
+        "Monte Cristi",
+        "Peravia",
+        "Puerto Plata",
+        "Salcedo",
+        "San Cristobal",
+        "San Pedro De Macoris",
+        "Sanchez Ramirez",
+        "Santiago",
+        "Valverde"
+      ].freeze,
+
+      "Ecuador" => [
+        "Azuay",
+        "El Oro",
+        "Guayas",
+        "Manabi",
+        "Pichincha",
+        "Tungurahua",
+      ].freeze,
+
       "Egypt" => [
         "Ad Daqahliyah",
         "Al Bahr al Ahmar",
@@ -143,6 +274,16 @@ module CSDL
         "Qina",
         "Shamal Sina'",
         "Suhaj"
+      ].freeze,
+
+      "El Salvador" => [
+        "La Libertad",
+        "La Union",
+        "San Miguel",
+        "San Salvador",
+        "Santa Ana",
+        "Sonsonate",
+        "Usulutan"
       ].freeze,
 
       "Estonia" => [
@@ -180,6 +321,10 @@ module CSDL
         "Rhône-Alpes"
       ].freeze,
 
+      "French Guiana" => [
+
+      ].freeze,
+
       "Germany" => [
         "Baden-Württemberg",
         "Bayern",
@@ -207,6 +352,31 @@ module CSDL
       "Greece" => [
         "Attiki",
         "Thessaloniki"
+      ].freeze,
+
+      "Guadeloupe" => [
+
+      ].freeze,
+
+      "Guatemala" => [
+        "Escuintla",
+        "Guatemala",
+        "Jutiapa",
+        "Quetzaltenango",
+        "Sacatepequez"
+      ].freeze,
+
+      "Haiti" => [
+        "Ouest"
+      ].freeze,
+
+      "Honduras" => [
+        "Atlantida",
+        "Comayagua",
+        "Copan",
+        "Cortes",
+        "Francisco Morazan",
+        "Yoro"
       ].freeze,
 
       "Hungary" => [
@@ -371,8 +541,9 @@ module CSDL
         "Gostivar"
       ].freeze,
 
-      "Malta" => [
-      ].freeze,
+      "Malta" => [].freeze,
+
+      "Martinique" => [].freeze,
 
       "Mauritius" => [
         "Flacq",
@@ -443,6 +614,15 @@ module CSDL
         "Zuid-Holland"
       ].freeze,
 
+      "Nicaragua" => [
+        "Chinandega",
+        "Esteli",
+        "Leon",
+        "Managua",
+        "Masaya",
+        "Matagalpa"
+      ].freeze,
+
       "Nigeria" => [
         "Abia",
         "Akwa Ibom",
@@ -499,6 +679,31 @@ module CSDL
 
       "Palestinian territories" => [].freeze,
 
+      "Panama" => [
+        "Chiriqui",
+        "Colon",
+        "Panama"
+      ].freeze,
+
+      "Paraguay" => [
+        "Alto Parana",
+        "Central",
+        "Itapua",
+        "Presidente Hayes"
+      ].freeze,
+
+      "Peru" => [
+        "Ancash",
+        "Arequipa",
+        "Cusco",
+        "Ica",
+        "La Libertad",
+        "Lambayeque",
+        "Lima",
+        "Piura",
+        "Tacna"
+      ].freeze,
+
       "Poland" => [
         "Dolnoslaskie",
         "Kujawsko-Pomorskie",
@@ -539,6 +744,8 @@ module CSDL
         "Vila Real",
         "Viseu"
       ].freeze,
+
+      "Puerto Rico" => [].freeze,
 
       "Qatar" => [
         "Ad Dawhah"
@@ -588,6 +795,10 @@ module CSDL
         "Vaslui",
         "Vrancea"
       ].freeze,
+
+      "Saint Barthelemy" => [].freeze,
+
+      "Saint Martin (French Part)" => [].freeze,
 
       "Saudi Arabia" => [
         "Al Jawf",
@@ -877,7 +1088,42 @@ module CSDL
         "West Virginia",
         "Wisconsin",
         "Wyoming"
-      ].freeze
+      ].freeze,
+
+      "Uruguay" => [
+        "Artigas",
+        "Canelones",
+        "Colonia",
+        "Maldonado",
+        "Montevideo",
+        "Paysandu",
+        "Rivera",
+        "Salto",
+        "San Jose",
+        "Soriano"
+      ].freeze,
+
+      "Venezuela" => [
+        "Anzoategui",
+        "Aragua",
+        "Barinas",
+        "Bolivar",
+        "Carabobo",
+        "Distrito Federal",
+        "Falcon",
+        "Guarico",
+        "Lara",
+        "Merida",
+        "Miranda",
+        "Monagas",
+        "Nueva Esparta",
+        "Portuguesa",
+        "Sucre",
+        "Tachira",
+        "Yaracuy",
+        "Zulia",
+      ].freeze,
+
     }.freeze
 
     REGIONS = REGIONS_BY_COUNTRY.values.flatten.freeze
