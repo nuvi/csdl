@@ -2,6 +2,14 @@ module CSDL
   module TargetValues
 
     REGIONS_BY_COUNTRY = {
+      
+      "Afghanistan" => [
+        "Balkh",
+        "Herat",
+        "Kabol",
+        "Kandahar"
+      ].freeze,
+
       "Argentina" => [
         "Neuquén",
         "Río Negro",
@@ -13,6 +21,17 @@ module CSDL
         "Santiago del Estero",
         "Tierra del Fuego",
         "Tucuman"
+      ].freeze,
+
+      "Australia" => [
+        "Northern Territory",
+        "Western Australia",
+        "Australian Capital Territory",
+        "New South Wales",
+        "South Australia",
+        "Victoria",
+        "Queensland",
+        "Tasmania"
       ].freeze,
 
       "Austria" => [
@@ -28,14 +47,18 @@ module CSDL
       ].freeze,
 
       "Bahrain" => [
-        "Al Muharraq"
+        "Al Muharraq",
       ].freeze,
 
       "Belgium" => [
         "Région De Bruxelles-Capitale"
       ].freeze,
 
-      "Bolivia" => [
+      "Bhutan" => [
+        "Thimphu"
+      ].freeze,
+
+      "Bolivia, Plurinational State of" => [
         "Chuquisaca",
         "Cochabamba",
         "El Beni",
@@ -69,7 +92,7 @@ module CSDL
         "Santa Catarina",
         "São Paulo",
         "Sergipe",
-        "Tocantins",
+        "Tocantins"
       ].freeze,
 
       "Bulgaria" => [
@@ -103,6 +126,13 @@ module CSDL
         "Yambol"
       ].freeze,
 
+      "Cambodia" => [
+        "Kampong Cham",
+        "Kampot",
+        "Kandal",
+        "Phnum Penh"
+      ].freeze,
+
       "Canada" => [
         "Alberta",
         "British Columbia",
@@ -113,8 +143,9 @@ module CSDL
         "Ontario",
         "Prince Edward Island",
         "Quebec",
-        "Saskatchewan"
-      ],
+        "Saskatchewan",
+        "Yukon"
+      ].freeze,
 
       "Chile" => [
         "Antofagasta",
@@ -245,7 +276,7 @@ module CSDL
         "Guayas",
         "Manabi",
         "Pichincha",
-        "Tungurahua",
+        "Tungurahua"
       ].freeze,
 
       "Egypt" => [
@@ -291,6 +322,10 @@ module CSDL
         "Tartumaa"
       ].freeze,
 
+      "Fiji" => [
+        "Central"
+      ].freeze,
+
       "Finland" => [
         "Åland",
         "Lapland"
@@ -321,10 +356,6 @@ module CSDL
         "Rhône-Alpes"
       ].freeze,
 
-      "French Guiana" => [
-
-      ].freeze,
-
       "Germany" => [
         "Baden-Württemberg",
         "Bayern",
@@ -352,10 +383,6 @@ module CSDL
       "Greece" => [
         "Attiki",
         "Thessaloniki"
-      ].freeze,
-
-      "Guadeloupe" => [
-
       ].freeze,
 
       "Guatemala" => [
@@ -402,7 +429,62 @@ module CSDL
         "Zala"
       ].freeze,
 
-      "Iceland" => [].freeze,
+      "India" => [
+        "Andhra Pradesh",
+        "Assam",
+        "Bihar",
+        "Chandigarh",
+        "Chhattisgarh",
+        "Delhi",
+        "Goa",
+        "Gujarat",
+        "Haryana",
+        "Himachal Pradesh",
+        "Jammu and Kashmir",
+        "Jharkhand",
+        "Karnataka",
+        "Kerala",
+        "Madhya Pradesh",
+        "Maharashtra",
+        "Mizoram",
+        "Orissa",
+        "Pondicherry",
+        "Punjab",
+        "Rajasthan",
+        "Tamil Nadu",
+        "Uttar Pradesh",
+        "Uttarakhand",
+        "West Bengal"
+      ].freeze,
+
+      "Indonesia" => [
+        "Aceh",
+        "Bali",
+        "Bengkulu",
+        "Jakarta Raya",
+        "Jambi",
+        "Jawa Barat",
+        "Jawa Tengah",
+        "Jawa Timur",
+        "Kalimantan Barat",
+        "Kalimantan Selatan",
+        "Kalimantan Tengah",
+        "Kalimantan Timur",
+        "Lampung",
+        "Maluku",
+        "Nusa Tenggara Barat",
+        "Nusa Tenggara Timur",
+        "Papua",
+        "Riau",
+        "Sulawesi Selatan",
+        "Sulawesi Tengah",
+        "Sulawesi Tenggara",
+        "Sulawesi Utara",
+        "Sumatera Barat",
+        "Sumatera Selatan",
+        "Sumatera Utara",
+        "Yogyakarta"
+      ].freeze,
 
       "Iraq" => [
         "Al Anbar",
@@ -486,6 +568,54 @@ module CSDL
         "Veneto"
       ].freeze,
 
+      "Japan" => [
+        "Aichi",
+        "Akita",
+        "Aomori",
+        "Chiba",
+        "Ehime",
+        "Fukui",
+        "Fukuoka",
+        "Fukushima",
+        "Gifu",
+        "Gunma",
+        "Hiroshima",
+        "Hokkaido",
+        "Hyogo",
+        "Ibaraki",
+        "Ishikawa",
+        "Iwate",
+        "Kagawa",
+        "Kagoshima",
+        "Kanagawa",
+        "Kochi",
+        "Kumamoto",
+        "Kyoto",
+        "Mie",
+        "Miyagi",
+        "Miyazaki",
+        "Nagano",
+        "Nagasaki",
+        "Nara",
+        "Niigata",
+        "Oita",
+        "Okayama",
+        "Okinawa",
+        "Osaka",
+        "Saitama",
+        "Shiga",
+        "Shimane",
+        "Shizuoka",
+        "Tochigi",
+        "Tokushima",
+        "Tokyo",
+        "Toyama",
+        "Wakayama",
+        "Yamagata",
+        "Yamaguchi",
+        "Yamanashi"
+      ].freeze,
+
       "Jordan" => [
         "Al Balqa'",
         "Al Karak",
@@ -497,6 +627,12 @@ module CSDL
         "Ma"
       ].freeze,
 
+      "Kazakhstan" => [
+        "Almaty",
+        "Aqmola",
+        "Atyrau"
+      ].freeze,
+
       "Kenya" => [
         "Central",
         "Coast",
@@ -504,9 +640,18 @@ module CSDL
         "Rift Valley"
       ].freeze,
 
-      "Kuwait" => [].freeze,
+      "Korea, Republic of" => [
+        "Gyeonggi-do",
+        "Seoul"
+      ].freeze,
 
-      "Latvia" => [].freeze,
+      "Kyrgyzstan" => [
+        "Bishkek"
+      ].freeze,
+
+      "Lao People's Democratic Republic" => [
+        "Vientiane"
+      ].freeze,
 
       "Lebanon" => [
         "Beyrouth",
@@ -541,9 +686,9 @@ module CSDL
         "Gostivar"
       ].freeze,
 
-      "Malta" => [].freeze,
-
-      "Martinique" => [].freeze,
+      "Malaysia" => [
+        "Johor"
+      ].freeze,
 
       "Mauritius" => [
         "Flacq",
@@ -586,8 +731,12 @@ module CSDL
         "Tlaxcala",
         "Veracruz",
         "Yucatán",
-        "Zacatecas"
-      ],
+        "Zacatecas State"
+      ].freeze,
+
+      "Mongolia" => [
+        "Ulaanbaatar"
+      ].freeze,
 
       "Morocco" => [
         "Casablanca",
@@ -597,6 +746,12 @@ module CSDL
         "Rabat-Sale",
         "Tanger",
         "Taza"
+      ].freeze,
+
+      "Myanmar" => [
+        "Mandalay",
+        "Shan State",
+        "Yangon"
       ].freeze,
 
       "Netherlands" => [
@@ -612,6 +767,12 @@ module CSDL
         "Utrecht",
         "Zeeland",
         "Zuid-Holland"
+      ].freeze,
+
+      "New Zealand" => [
+        "Auckland",
+        "Canterbury",
+        "Wellington"
       ].freeze,
 
       "Nicaragua" => [
@@ -677,12 +838,25 @@ module CSDL
         "Zufar"
       ].freeze,
 
-      "Palestinian territories" => [].freeze,
+      "Pakistan" => [
+        "Azad Kashmir",
+        "Balochistan",
+        "Islamabad",
+        "Khyber Pakhtunkhwa",
+        "Northern Areas",
+        "Punjab",
+        "Sindh"
+      ].freeze,
 
       "Panama" => [
         "Chiriqui",
         "Colon",
         "Panama"
+      ].freeze,
+
+      "Papua New Guinea" => [
+        "Morobe",
+        "National Capital"
       ].freeze,
 
       "Paraguay" => [
@@ -702,6 +876,11 @@ module CSDL
         "Lima",
         "Piura",
         "Tacna"
+      ].freeze,
+
+      "Philippines" => [
+        "Davao",
+        "Zamboanga"
       ].freeze,
 
       "Poland" => [
@@ -744,8 +923,6 @@ module CSDL
         "Vila Real",
         "Viseu"
       ].freeze,
-
-      "Puerto Rico" => [].freeze,
 
       "Qatar" => [
         "Ad Dawhah"
@@ -796,10 +973,6 @@ module CSDL
         "Vrancea"
       ].freeze,
 
-      "Saint Barthelemy" => [].freeze,
-
-      "Saint Martin (French Part)" => [].freeze,
-
       "Saudi Arabia" => [
         "Al Jawf",
         "Al Madinah",
@@ -812,8 +985,6 @@ module CSDL
         "Tabuk"
       ].freeze,
 
-      "Serbia" => [].freeze,
-
       "Slovakia" => [
         "Banska Bystrica",
         "Bratislava",
@@ -824,8 +995,6 @@ module CSDL
         "Trnava",
         "Zilina"
       ].freeze,
-
-      "Slovenia" => [].freeze,
 
       "South Africa" => [
         "Eastern Cape",
@@ -904,6 +1073,91 @@ module CSDL
         "Vaud",
         "Zug",
         "Zürich"
+      ].freeze,
+
+      "Taiwan, Province of China" => [
+        "Kaohsiung",
+        "Taipei"
+      ].freeze,
+
+      "Thailand" => [
+        "Amnat Charoen",
+        "Ang Thong",
+        "Ayutthaya",
+        "Bangkok",
+        "Bueng Kan",
+        "Buriram",
+        "Chachoengsao",
+        "Chai Nat",
+        "Chaiyaphum",
+        "Chanthaburi",
+        "Chiang Mai",
+        "Chiang Rai",
+        "Chon Buri",
+        "Chumphon",
+        "Kalasin",
+        "Kamphaeng Phet",
+        "Kanchanaburi",
+        "Khon Kaen",
+        "Krabi",
+        "Lampang",
+        "Lamphun",
+        "Loei",
+        "Lop Buri",
+        "Mae Hong Son",
+        "Maha Sarakham",
+        "Mukdahan",
+        "Nakhon Nayok",
+        "Nakhon Pathom",
+        "Nakhon Phanom",
+        "Nakhon Ratchasima",
+        "Nakhon Sawan",
+        "Nakhon Si Thammarat",
+        "Nan",
+        "Narathiwat",
+        "Nong Bua Lam Phu",
+        "Nong Khai",
+        "Nonthaburi",
+        "Pathum Thani",
+        "Pattani",
+        "Phangnga",
+        "Phatthalung",
+        "Phayao",
+        "Phetchabun",
+        "Phetchaburi",
+        "Phichit",
+        "Phitsanulok",
+        "Phrae",
+        "Phuket",
+        "Prachin Buri",
+        "Prachuap Khiri Khan",
+        "Ranong",
+        "Ratchaburi",
+        "Rayong",
+        "Roi Et",
+        "Sa Kaeo",
+        "Sakon Nakhon",
+        "Samut Prakan",
+        "Samut Sakhon",
+        "Samut Songkhram",
+        "Saraburi",
+        "Satun",
+        "Sing Buri",
+        "Sisaket",
+        "Songkhla",
+        "Sukhothai",
+        "Suphan Buri",
+        "Surat Thani",
+        "Surin",
+        "Tak",
+        "Trang",
+        "Trat",
+        "Ubon Ratchathani",
+        "Udon Thani",
+        "Uthai Thani",
+        "Uttaradit",
+        "Yala",
+        "Yasothon"
       ].freeze,
 
       "Tunisia" => [
@@ -1032,9 +1286,9 @@ module CSDL
 
       "United Kingdom" => [
         "England",
+        "Northern Ireland",
         "Scotland",
-        "Wales",
-        "Northern Ireland"
+        "Wales"
       ].freeze,
 
       "United States" => [
@@ -1103,7 +1357,7 @@ module CSDL
         "Soriano"
       ].freeze,
 
-      "Venezuela" => [
+      "Venezuela, Bolivarian Republic of" => [
         "Anzoategui",
         "Aragua",
         "Barinas",
@@ -1121,9 +1375,9 @@ module CSDL
         "Sucre",
         "Tachira",
         "Yaracuy",
-        "Zulia",
+        "Zulia"
       ].freeze,
-
+      
     }.freeze
 
     REGIONS = REGIONS_BY_COUNTRY.values.flatten.freeze
