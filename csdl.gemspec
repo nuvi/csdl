@@ -6,8 +6,8 @@ require 'csdl/version'
 Gem::Specification.new do |spec|
   spec.name          = "csdl"
   spec.version       = CSDL::VERSION
-  spec.authors       = ["BJ Neilsen"]
-  spec.email         = ["bj.neilsen@gmail.com"]
+  spec.authors       = ["BJ Neilsen", "David Richards"]
+  spec.email         = ["bj.neilsen@gmail.com", "davidlamontrichards@gmail.com"]
 
   spec.summary       = %q{AST Processor and Query Builder for DataSift's CSDL language}
   spec.description   = %q{
