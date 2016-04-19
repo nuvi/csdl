@@ -111,6 +111,16 @@ module CSDL
     #               s(:string, "foo")))
     #   CSDL::Processor.new.process(node) # => 'NOT fb.content contains_any "foo"'
     #
+    # @example Negating logical groupings
+    #   node = s(:not,
+    #            s(:logical_group,
+    #              s(:condition,
+    #                s(:target, "fb.content"),
+    #                s(:operator, :contains_any),
+    #                s(:argument,
+    #                  s(:string, "baz")))))
+    #   CSDL::Processor.new.process(node) # => 'NOT (fb.content contains_any "baz")'
+    #
     # @param node [AST::Node] The :not node to be processed.
     #
     # @return [String] The child nodes :target, :operator, and :argument, processed and joined.
@@ -119,10 +129,13 @@ module CSDL
     # @todo Raise when we don't have a operator node.
     # @todo Raise when we don't have a argument node, assuming the operator is binary.
     # @todo Raise if the argument node's child is not of a valid node type for the given operator.
-    # @todo Support negating logical groupings.
     #
     def on_not(node)
-      "NOT " + process(node.updated(:condition))
+      if node.children.size > 0 && node.children.first.type != :target
+        "NOT " + process(node.children.first)
+      else
+        "NOT " + process(node.updated(:condition))
+      end
     end
 
     # Process :operator nodes, ensuring the the given terminator value is a valid operator.
