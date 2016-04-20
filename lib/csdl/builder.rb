@@ -78,6 +78,7 @@ module CSDL
     # @param target [#to_s] A valid Target specifier (see {CSDL::TARGETS}).
     # @param operator [#to_s] A valid Operator specifier (see {CSDL::OPERATORS}).
     # @param argument [String, Numeric, nil] The comparator value, if applicable for the given operator.
+    # @param block [Proc] Block to return child nodes to apply to this :not node. Block is evaluated against the builder instance. Only the first child node will be used.
     #
     # @return [AST::Node] An AST :not node with child target, operator, and argument nodes.
     #
