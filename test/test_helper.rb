@@ -3,3 +3,4 @@ require "csdl"
 
 require "minitest/pride" unless ENV.key?("NOCOLOR")
 require "minitest/autorun"
+require "mocha/mini_test"
