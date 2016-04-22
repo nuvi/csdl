@@ -105,10 +105,5 @@ module CSDL
       result = ::CSDL::OptimizingProcessor.new.process(ast)
       result
     end
-
-    private
-
-    def generate_boolean_tree(node, unique_conditions = {})
-    end
   end
 end
