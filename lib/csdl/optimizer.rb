@@ -1,3 +1,5 @@
+require "open3"
+
 module CSDL
 
   # {Optimizer} is a class used to optimize CSDL trees treating them as boolean expressions.
@@ -68,13 +70,40 @@ module CSDL
     #     end
     #   end
     #   optimized_tree = CSDL::Optimizer.new.optimize(tree)
-    #   CSDL::Processor.new.process(optimized_tree) # => 'NOT fb.content contains_any "apple,book" OR fb.content contains_all "apple,book" OR NOT fb.content contains "book" AND fb.content contains "cat"'
     #
     # @param  node [AST::Node] The CSDL tree to optimize.
     # @return [AST::Node] An optimized CSDL as an AST node with its children.
     #
     def optimize(node)
-      return node
+      processor = BooleanProcessor.new
+      expression = processor.process(node)
+      return nil unless expression && !expression.empty?
+      vars = processor.conditions_origins.keys.map { |varname| "#{varname} = exprvar('#{varname}')" }.join("\n")
+      script = "from pyeda.inter import *\n" \
+               "#{vars}\n"\
+               "f = #{expression}\n" \
+               "f = f.to_dnf()\n" \
+               "if f == expr(0):\n" \
+               "  print('0', end='')\n" \
+               "elif f != expr(1):\n" \
+               "  fm, = espresso_exprs(f.to_dnf())\n" \
+               "  if fm == expr(0):\n" \
+               "    print('0', end='')\n" \
+               "  elif fm != expr(1):\n" \
+               "    print(fm, end='')"
+      Open3.popen3("python3") do |stdin, stdout, stderr, wait_thr|
+        stdin.write(script)
+        stdin.close
+        exit_status = wait_thr.value
+        fail StandardError, "Error executing pyeda espresso (#{exit_status}): #{stderr.read}" unless exit_status.success?
+        expression = stdout.read
+      end
+      return nil if expression == ""
+      raise FalseExpressionError, "The given conditions are always FALSE" if expression == "0"
+      tokens = ::CSDL::BooleanLexer.new.lex(expression)
+      ast = ::CSDL::BooleanParser.new(processor.conditions_origins).parse(tokens.dup)
+      result = ::CSDL::OptimizingProcessor.new.process(ast)
+      result
     end
 
     private

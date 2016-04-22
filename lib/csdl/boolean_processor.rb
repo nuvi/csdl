@@ -12,7 +12,9 @@ module CSDL
   #   end
   #
   #   # Process the root node and its children calling the instance method #process
-  #   CSDL::BooleanProcessor.new.process(root_node)
+  #   processor = CSDL::BooleanProcessor.new
+  #   expression = processor.process(root_node)
+  #   conditions = processor.conditions
   #
   # @see Builder
   # @see http://www.rubydoc.info/gems/ast/AST/Processor AST::Processor
@@ -22,6 +24,10 @@ module CSDL
   class BooleanProcessor < ::AST::Processor
     def conditions
       @conditions ||= {}
+    end
+
+    def conditions_origins
+      @conditions_origins ||= {}
     end
 
     # AND two or more child nodes together.
@@ -45,10 +51,10 @@ module CSDL
     # @raise [MissingChildNodesError] When less than 2 child nodes are present.
     # @raise [InvalidChildNodeError] When it has a child that is neither a condition nor a logical expression.
     #
-    # @return [AST::Node] Processed child nodes ANDed together into a boolean expression tree representation.
+    # @return [String] Processed child nodes ANDed together into a boolean expression representation.
     #
     def on_and(node)
-      logically_join_nodes("AND", node.children)
+      logically_join_nodes("And", node.children)
     end
 
     # Process the first child node as the "argument" in a condition node tree (target + operator + argument).
@@ -68,7 +74,7 @@ module CSDL
       process(node.children.first).to_s
     end
 
-    # Process :condition node and it's expected children :target, :operator, and :argument nodes.
+    # Process :condition node and it's expected children :target, :operator, and :argument nodes. The conditions with "contains_any" and "contains_all" operators are translated into groups of conditions with "contains" operator.
     #
     # @example
     #   node = s(:condition,
@@ -76,11 +82,11 @@ module CSDL
     #             s(:operator, :contains_any),
     #             s(:argument,
     #               s(:string, "foo")))
-    #   CSDL::BooleanProcessor.new.process(node)
+    #   CSDL::BooleanProcessor.new.process(node) # => "v1"
     #
     # @param node [AST::Node] The :condition node to be processed.
     #
-    # @return [AST::Node] The child nodes :target, :operator, and :argument, processed and joined.
+    # @return [String] The child nodes :target, :operator, and :argument, processed and joined into the condition which name is returned.
     #
     # @todo Raise when we don't have a target node.
     # @todo Raise when we don't have a operator node.
@@ -91,9 +97,24 @@ module CSDL
       target   = node.children.find { |child| child.type == :target }
       operator = node.children.find { |child| child.type == :operator }
       argument = node.children.find { |child| child.type == :argument }
-      condition = process_all([ target, operator, argument ].compact).join(" ")
-      register_condition(condition)
-      AST::Node.new(:exprvar, [condition])
+
+      if operator and operator.children.first
+        operator_name = operator.children.first.to_sym
+        if [:contains_any, :contains_all].include? operator_name
+          words = argument.children.first.children.first.to_s.split(/(?<!\\),/).map { |value| value.gsub(/(?<!\\)\\,/, ",").strip  }
+          conditions = words.map { |word| AST::Node.new(:condition, [target, AST::Node.new(:operator, [:contains]), argument.updated(nil, [AST::Node.new(:string, [word])])]) }
+          processed_conditions = process_all(conditions)
+          if processed_conditions.count > 1
+            group_operator = (operator_name == :contains_any ? :Or : :And)
+            return "#{group_operator}(#{processed_conditions.join(",")})"
+          else
+            return processed_conditions.first
+          end
+        end
+      end
+      processed = process_all([ target, operator, argument ])
+      condition = processed.compact.join(" ")
+      register_condition(condition, node)
     end
 
     # Process all child nodes.
@@ -111,14 +132,14 @@ module CSDL
     #               s(:operator, :contains")
     #               s(:argument,
     #                 s(:string, "bar")))))
-    #   CSDL::BooleanProcessor.new.process(node)
+    #   CSDL::BooleanProcessor.new.process(node) # => "Or(v1,v2)"
     #
     # @param node [AST::Node] The :logical_group node to be processed.
     #
     # @raise [MissingChildNodesError] When the node doesn't have a child node.
     # @raise [InvalidChildNodeError] When it has a child that is neither a condition nor a logical expression.
     #
-    # @return [AST::Node] The first child node processed by its node type into a boolean expression tree sentation.
+    # @return [String] The first child node processed by its node type into a boolean expression.
     #
     def on_logical_group(node)
       fail MissingChildNodesError, "#{node} should have one child" if node.children.size == 0
@@ -144,11 +165,11 @@ module CSDL
     #                s(:operator, :contains_any),
     #                s(:argument,
     #                  s(:string, "baz")))))
-    #   CSDL::BooleanProcessor.new.process(node)
+    #   CSDL::BooleanProcessor.new.process(node) # => "Not(v1)"
     #
     # @param node [AST::Node] The :not node to be processed.
     #
-    # @return [AST::Node] The child nodes :target, :operator, and :argument, processed and joined.
+    # @return [String] The child nodes :target, :operator, and :argument, processed and joined to form the condition which name will be wrapped into Not().
     #
     # @todo Raise when we don't have a target node.
     # @todo Raise when we don't have a operator node.
@@ -157,9 +178,9 @@ module CSDL
     #
     def on_not(node)
       if node.children.size > 0 && node.children.first.type != :target
-        AST::Node.new("NOT", [process(node.children.first)])
+        "Not(#{process(node.children.first)})"
       else
-        AST::Node.new("NOT", [process(node.updated(:condition))])
+        "Not(#{process(node.updated(:condition))})"
       end
     end
 
@@ -193,35 +214,34 @@ module CSDL
     #              s(:operator, :contains),
     #              s(:argument,
     #                s(:string, "bar"))))
-    #   CSDL::BooleanProcessor.new.process(node)
+    #   CSDL::BooleanProcessor.new.process(node) # => "Or(v1,v2)"
     #
     # @param node [AST::Node] The :or node to be processed.
     #
     # @raise [MissingChildNodesError] When less than 2 child nodes are present.
     # @raise [InvalidChildNodeError] When it has a child that is neither a condition nor a logical expression.
     #
-    # @return [AST::Node] Processed child nodes OR'd together into a boolean expression tree representation.
+    # @return [String] Processed child nodes OR'd together into a boolean expression.
     #
     def on_or(node)
-      logically_join_nodes("OR", node.children)
+      logically_join_nodes("Or", node.children)
     end
 
     # Process :raw nodes.
     #
     # @example
     #   node = s(:raw, %q{fb.content contains_any "foo" OR fb.parent.content contains_any "foo"})
-    #   CSDL::Processor.new.process(node) # => 'fb.content contains_any "foo" OR fb.parent.content contains_any "foo"'
+    #   CSDL::Processor.new.process(node) # => 'v1'
     #
     # @param node [AST::Node] The :raw node to be processed.
     #
-    # @return [AST::Node] The first child node as an exprvar node.
+    # @return [String] The first child node as an exprvar node.
     #
     # @todo Raise if the node doesn't have any children.
     #
     def on_raw(node)
       condition = node.children.first.to_s
-      register_condition(condition)
-      AST::Node.new(:exprvar, [condition])
+      register_condition(condition, node)
     end
 
     # Process the first child node. Useful for grouping child nodes without any syntax introduction.
@@ -231,7 +251,7 @@ module CSDL
     # @see InteractionFilterProcessor#tag_tree
     #
     def on_root(node)
-      process(node.children.first)
+      process(node.children.first) || ""
     end
 
     # Wrap the stringified terminal value in quotes.
@@ -298,12 +318,16 @@ module CSDL
         process(node)
       end
 
-      AST::Node.new(logical_operator.upcase, processed_nodes)
+      "#{logical_operator}(#{processed_nodes.join(",")})"
     end
 
-    def register_condition(condition)
+    def register_condition(condition, condition_node)
       @conditions ||= {}
-      @conditions[condition] ||= condition
+      @conditions_origins ||= {}
+      @conditions_counter ||= 0
+      var_name = @conditions[condition] ||= "v#{(@conditions_counter += 1)}"
+      @conditions_origins[var_name] = condition_node.clone
+      var_name
     end
 
     def validate_expression_node!(node, parent_node)
