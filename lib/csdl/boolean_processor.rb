@@ -117,7 +117,7 @@ module CSDL
       register_condition(condition, node)
     end
 
-    # Process all child nodes.
+    # Process first child node.
     #
     # @example
     #   node = s(:logical_group,

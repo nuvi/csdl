@@ -17,6 +17,8 @@ module CSDL
     # After doing boolean expression optimization the {Optimizer} will glue multiple "contains" conditions
     # into "contains_any" and "contains_all" conditions according to the expression's logic.
     #
+    # @raise [FalseExpressionError] when the tree represents FALSE expression.
+    #
     # @example
     #   tree = CSDL::Builder.new.logical_group do
     #     _or do

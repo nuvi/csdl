@@ -34,6 +34,16 @@ module CSDL
   # @see http://dev.datasift.com/docs/csdl DataSift CSDL Language Documentation
   #
   class InteractionFilterProcessor < ::CSDL::Processor
+    # Instance contructor
+    #
+    # @param optimize_conditions [Boolean] Pass 'true' to enable CSDL optimimization
+    #
+    # @see Optimizer#optimize
+    #
+    def initialize(optimize_conditions = false)
+      super()
+      @optimize_conditions = optimize_conditions
+    end
 
     # Generate a return statement by processing the child statement_scope node.
     #
@@ -56,6 +66,7 @@ module CSDL
         fail ::CSDL::MissingReturnStatementScopeError, "Invalid CSDL AST: return statment scope is missing"
       end
 
+      statement_scope = optimize_statement_scope(statement_scope)
       "return #{process(statement_scope)}"
     end
 
@@ -123,6 +134,13 @@ module CSDL
       tag_namespace = "tag"
       unless tag_namespaces.nil?
         tag_namespace += process(tag_namespaces)
+      end
+
+      begin
+        statement_scope = optimize_statement_scope(statement_scope)
+      rescue ::CSDL::FalseExpressionError
+        # Remove the tag if condition is FALSE
+        return ""
       end
 
       children = [tag_namespace] + process_all([ tag_class, statement_scope ])
@@ -199,5 +217,9 @@ module CSDL
       end
     end
 
+    def optimize_statement_scope(statement_scope)
+      return statement_scope unless @optimize_conditions
+      AST::Node.new(:statement_scope, [::CSDL::Optimizer.new.optimize(statement_scope.children.first)])
+    end
   end
 end
