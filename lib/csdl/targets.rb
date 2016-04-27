@@ -71,6 +71,7 @@ module CSDL
     [ "instagram.type"                    , true  , true  , true  , :INTERACTION_TYPES ] ,
     [ "interaction.content"               , true  , false , true  , :UNBOUNDED ] ,
     [ "interaction.hashtags"              , true  , true  , true  , :UNBOUNDED ] ,
+    [ "interaction.mentions"              , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.media_type"            , true  , true  , true  , :MEDIA_TYPES ] ,
     [ "interaction.ml.categories"         , false , true  , true  , :UNBOUNDED ] ,
     [ "interaction.raw_content"           , true  , false , true  , :UNBOUNDED ] ,
