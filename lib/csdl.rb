@@ -17,10 +17,13 @@ require "csdl/error"
 require "csdl/targets"
 require "csdl/operators"
 require "csdl/builder"
-require "csdl/boolean_lexer"
-require "csdl/boolean_parser"
-require "csdl/optimizing_processor"
-require "csdl/optimizer"
+begin
+  require "csdl/boolean_lexer"
+  require "csdl/boolean_parser"
+  require "csdl/optimizing_processor"
+  require "csdl/optimizer"
+rescue LoadError
+end
 require "csdl/processor"
 require "csdl/boolean_processor"
 require "csdl/interaction_filter_processor"
