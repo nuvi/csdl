@@ -68,6 +68,7 @@ module CSDL
     [ "fb.topics.website"                 , true  , false , false , :UNBOUNDED ] ,
     [ "fb.topic_ids"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "fb.type"                           , true  , true  , true  , :INTERACTION_TYPES ] ,
+    [ "instagram.from.username"           , true  , true  , true  , :UNBOUNDED ] ,
     [ "instagram.type"                    , true  , true  , true  , :INTERACTION_TYPES ] ,
     [ "interaction.content"               , true  , false , true  , :UNBOUNDED ] ,
     [ "interaction.hashtags"              , true  , true  , true  , :UNBOUNDED ] ,
