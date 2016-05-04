@@ -84,7 +84,8 @@ module CSDL
     [ "links.domain"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.normalized_url"              , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.url"                         , true  , true  , true  , :UNBOUNDED ] ,
-    [ "tumblr.blog_name"                  , true  , true  , true  , :UNBOUNDED ]
+    [ "tumblr.blog_name"                  , true  , true  , true  , :UNBOUNDED ] ,
+    [ "tumblr.type"                       , true  , true  , true  , :UNBOUNDED ]
 
   ]
 
