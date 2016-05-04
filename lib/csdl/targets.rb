@@ -70,6 +70,7 @@ module CSDL
     [ "fb.type"                           , true  , true  , true  , :INTERACTION_TYPES ] ,
     [ "instagram.from.username"           , true  , true  , true  , :UNBOUNDED ] ,
     [ "instagram.type"                    , true  , true  , true  , :INTERACTION_TYPES ] ,
+    [ "interaction.author.username"       , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.content"               , true  , false , true  , :UNBOUNDED ] ,
     [ "interaction.hashtags"              , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.mentions"              , true  , true  , true  , :UNBOUNDED ] ,
