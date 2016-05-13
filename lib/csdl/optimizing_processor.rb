@@ -86,13 +86,14 @@ module CSDL
     end
 
     def on_logical_group(node)
-      ::AST::Node.new(:logical_group, process(node.children.first))
+      ::AST::Node.new(:logical_group, [process(node.children.first)])
     end
 
     private
 
     def process_and_or_group(node)
       mapping = {}
+      puts caller unless node
       processed_children = process_all(node.children)
       result_nodes = []
       processed_children.each do |child|
