@@ -86,7 +86,7 @@ module CSDL
     end
 
     def on_logical_group(node)
-      puts caller
+      puts caller unless node
       ::AST::Node.new(:logical_group, [process(node.children.first)])
     end
 
