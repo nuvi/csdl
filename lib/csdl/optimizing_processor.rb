@@ -116,7 +116,7 @@ module CSDL
           end
         end
         operator = children.find { |grandchild| grandchild.type == :operator }.children.first.to_sym
-        unless [:contains, :contains_any, :contains_all].include?(operator)
+        unless operator == :contains
           result_nodes << child
           next
         end
