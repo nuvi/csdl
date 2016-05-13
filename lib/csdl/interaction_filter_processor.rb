@@ -37,12 +37,14 @@ module CSDL
     # Instance contructor
     #
     # @param optimize_conditions [Boolean] Pass 'true' to enable CSDL optimimization
+    # @param skip_espresso       [Boolean] Pass 'true' to skip optimization by espresso algorithm
     #
     # @see Optimizer#optimize
     #
-    def initialize(optimize_conditions = false)
+    def initialize(optimize_conditions = false, skip_espresso = false)
       super()
       @optimize_conditions = optimize_conditions
+      @skip_espresso = skip_espresso
     end
 
     # Generate a return statement by processing the child statement_scope node.
@@ -219,7 +221,7 @@ module CSDL
 
     def optimize_statement_scope(statement_scope)
       return statement_scope unless @optimize_conditions
-      AST::Node.new(:statement_scope, [::CSDL::Optimizer.new.optimize(statement_scope.children.first)])
+      AST::Node.new(:statement_scope, [::CSDL::Optimizer.new(@skip_espresso).optimize(statement_scope.children.first)])
     end
   end
 end
