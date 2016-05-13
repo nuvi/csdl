@@ -93,7 +93,6 @@ module CSDL
 
     def process_and_or_group(node)
       mapping = {}
-      puts caller unless node
       processed_children = process_all(node.children)
       result_nodes = []
       processed_children.each do |child|
