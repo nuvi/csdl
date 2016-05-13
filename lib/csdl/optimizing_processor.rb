@@ -100,6 +100,7 @@ module CSDL
           result_nodes << child
           next
         end
+        child = child.children.first if child.type == :logical_group
         key_two = child.type
         operator = child.children.find { |grandchild| grandchild.type == :operator }.children.first.to_sym
         unless [:contains, :contains_any, :contains_all].include?(operator)
