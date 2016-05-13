@@ -87,12 +87,12 @@ module CSDL
     # @return [AST::Node] An optimized CSDL as an AST node with its children.
     #
     def optimize(node)
-      processor = BooleanProcessor.new
-      expression = processor.process(node)
-      return nil unless expression && !expression.empty?
       if @skip_espresso
-        ast = expression
+        ast = node
       else
+        processor = BooleanProcessor.new
+        expression = processor.process(node)
+        return nil unless expression && !expression.empty?
         vars = processor.conditions_origins.keys.map { |varname| "#{varname} = exprvar('#{varname}')" }.join("\n")
         script = "from pyeda.inter import *\n" \
                  "#{vars}\n"\
@@ -118,8 +118,7 @@ module CSDL
         tokens = ::CSDL::BooleanLexer.new.lex(expression)
         ast = ::CSDL::BooleanParser.new(processor.conditions_origins).parse(tokens.dup)
       end
-      result = ::CSDL::OptimizingProcessor.new.process(ast)
-      result
+      ::CSDL::OptimizingProcessor.new.process(ast)
     end
   end
 end
