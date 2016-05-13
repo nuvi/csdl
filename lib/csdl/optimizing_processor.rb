@@ -85,6 +85,10 @@ module CSDL
       process_and_or_group(node)
     end
 
+    def on_logical_group(node)
+      ::AST::Node.new(:logical_group, [process(node.children.first)])
+    end
+
     private
 
     def process_and_or_group(node)
