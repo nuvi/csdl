@@ -103,10 +103,10 @@ module CSDL
         key_two = child.type
         children = child.children
         if key_two == :not && children.first.type == :logical_group
-          result_nodes << process(children.first)
+          result_nodes << ::AST::Node::new(:not, [process(children.first)])
           next
         end
-        if [:or, :and].include?(children.first)
+        if [:or, :and].include?(children.first.type)
           processed_group = process(children.first)
           if processed_group.type == :condition
             children = processed_group.children
