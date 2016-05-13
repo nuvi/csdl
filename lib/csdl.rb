@@ -21,6 +21,8 @@ begin
   require "csdl/boolean_lexer"
   require "csdl/boolean_parser"
 rescue LoadError
+  class ::CSDL::BooleanLexer; end
+  class ::CSDL::BooleanParser; end
 end
 require "csdl/optimizing_processor"
 require "csdl/optimizer"
