@@ -97,13 +97,25 @@ module CSDL
       result_nodes = []
       processed_children.each do |child|
         unless [:condition, :not].include?(child.type)
-          result_nodes << child
+          result_nodes << process(child)
           next
         end
-        child = child.children.first if child.type == :logical_group
         key_two = child.type
-        puts child.inspect unless child.children.find { |grandchild| grandchild.type == :operator }
-        operator = child.children.find { |grandchild| grandchild.type == :operator }.children.first.to_sym
+        children = child.children
+        if key_two == :not && children.first.type == :logical_group
+          result_nodes << process(children.first)
+          next
+        end
+        if [:or, :and].include?(children.first)
+          processed_group = process(children.first)
+          if processed_group.type == :condition
+            children = processed_group.children
+          else
+            result_nodes << processed_group
+            next
+          end
+        end
+        operator = children.find { |grandchild| grandchild.type == :operator }.children.first.to_sym
         unless [:contains, :contains_any, :contains_all].include?(operator)
           result_nodes << child
           next
