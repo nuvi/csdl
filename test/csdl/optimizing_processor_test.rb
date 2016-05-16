@@ -496,4 +496,58 @@ class OptimizingProcessorTest < ::MiniTest::Test
     actual = CSDL::OptimizingProcessor.new.process(sexp)
     assert_equal(expected, actual)
   end
+
+  def test_complex_logical_groups_with_not
+    sexp = s(:logical_group,
+             s(:and,
+               s(:condition,
+                 s(:target, "instagram.type"),
+                 s(:operator, :==),
+                 s(:argument,
+                   s(:string, "image"))),
+               s(:logical_group,
+                 s(:and,
+                   s(:not,
+                     s(:logical_group,
+                       s(:or,
+                         s(:condition,
+                           s(:target, "interaction.hashtags"),
+                           s(:operator, :contains),
+                           s(:argument,
+                             s(:string, "cnn"))),
+                         s(:condition,
+                           s(:target, "interaction.content"),
+                           s(:operator, :contains),
+                           s(:argument,
+                             s(:string, "apple")))))),
+                   s(:condition,
+                     s(:target, "interaction.hashtags"),
+                     s(:operator, :contains),
+                     s(:argument,
+                       s(:string, "nuvi")))))))
+    expected = s(:logical_group,
+                 s(:and,
+                   s(:condition,
+                     s(:target, "instagram.type"),
+                     s(:operator, :==),
+                     s(:argument,
+                       s(:string, "image"))),
+                   s(:not,
+                     s(:target, "interaction.hashtags"),
+                     s(:operator, :contains),
+                     s(:argument,
+                       s(:string, "cnn"))),
+                   s(:condition,
+                     s(:target, "interaction.hashtags"),
+                     s(:operator, :contains),
+                     s(:argument,
+                       s(:string, "nuvi"))),
+                   s(:not,
+                     s(:target, "interaction.content"),
+                     s(:operator, :contains),
+                     s(:argument,
+                       s(:string, "apple")))))
+    actual = CSDL::OptimizingProcessor.new.process(sexp)
+    assert_equal(expected, actual)
+  end
 end

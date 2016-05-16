@@ -94,7 +94,8 @@ module CSDL
     def on_not(node)
       if node.children.first && [:and, :or, :logical_group].include?(node.children.first.type)
         result = process(node.children.first)
-        result = ::AST::Node.new(:logical_group, [result]) if [:and, :or].include?(result.type)
+        return apply_not(::AST::Node.new(:logical_group, [result])) if [:and, :or].include?(result.type)
+        return apply_not(result) if result.type == :logical_group
         if result.type == :condition
           result = ::AST::Node.new(:not, result.children)
         elsif result.type == :not
@@ -108,26 +109,40 @@ module CSDL
 
     private
 
+    def apply_not(node)
+      return ::AST::Node.new(:not, node.children) if node.type == :condition
+
+      if node.type == :not
+        return ::AST::Node.new(:condition, node.children) unless [:logical_group, :or, :and].include?(node.children.first.type)
+        return node.children.first if node.children.first.type == :logical_group
+        return node.children.first
+      end
+      node = node.children.first while node.type == :logical_group
+      new_type = node.type == :or ? :and : :or
+      new_children = node.children.map { |child| apply_not(child) }
+      AST::Node::new(:logical_group, [AST::Node.new(new_type, new_children)])
+    end
+
     def process_and_or_group(node)
       mapping = {}
-      processed_children = process_all(node.children)
+      preprocessed_children = process_all(node.children)
+      processed_children = []
+      preprocessed_children.each do |child|
+        if child.type == :logical_group && child.children.first.type == node.type
+          processed_children += child.children.first.children
+        else
+          processed_children << child
+        end
+      end
+
       result_nodes = []
       processed_children.each do |child|
-        unless [:condition, :not].include?(child.type)
+        if ![:condition, :not].include?(child.type) || child.type == :not && [:logical_group, :or, :and].include?(child.children.first.type)
           result_nodes << process(child)
           next
         end
         key_two = child.type
         children = child.children
-        if [:or, :and, :logical_group].include?(children.first.type)
-          processed_group = process(children.first)
-          if processed_group.type == :condition || processed_group.type == :not && processed_group.children.first.type != :logical_group
-            children = processed_group.children
-          else
-            result_nodes << processed_group
-            next
-          end
-        end
         operator = children.find { |grandchild| grandchild.type == :operator }.children.first.to_sym
 
         unless [:contains, :contains_all, :contains_any].include?(operator)
