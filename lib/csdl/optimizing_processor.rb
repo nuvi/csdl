@@ -86,7 +86,24 @@ module CSDL
     end
 
     def on_logical_group(node)
-      ::AST::Node.new(:logical_group, [process(node.children.first)])
+      result = process(node.children.first)
+      result = ::AST::Node.new(:logical_group, [result]) if [:and, :or].include?(result.type)
+      result
+    end
+
+    def on_not(node)
+      if node.children.first && [:and, :or, :logical_group].include?(node.children.first.type)
+        result = process(node.children.first)
+        result = ::AST::Node.new(:logical_group, [result]) if [:and, :or].include?(result.type)
+        if result.type == :condition
+          result = ::AST::Node.new(:not, result.children)
+        elsif result.type == :not
+          result = ::AST::Node.new(:condition, result.children)
+        end
+      else
+        result = node
+      end
+      result
     end
 
     private
@@ -102,13 +119,9 @@ module CSDL
         end
         key_two = child.type
         children = child.children
-        if key_two == :not && children.first.type == :logical_group
-          result_nodes << ::AST::Node::new(:not, [process(children.first)])
-          next
-        end
-        if [:or, :and].include?(children.first.type)
+        if [:or, :and, :logical_group].include?(children.first.type)
           processed_group = process(children.first)
-          if processed_group.type == :condition
+          if processed_group.type == :condition || processed_group.type == :not && processed_group.children.first.type != :logical_group
             children = processed_group.children
           else
             result_nodes << processed_group
@@ -116,18 +129,22 @@ module CSDL
           end
         end
         operator = children.find { |grandchild| grandchild.type == :operator }.children.first.to_sym
-        unless operator == :contains
+
+        unless [:contains, :contains_all, :contains_any].include?(operator)
           result_nodes << child
           next
         end
-        key_three = operator
 
         # Groupping Operator  Condition Type    RESULT
         #         :and         :condition    :contains_all
         #         :and         :not          :contains_any
         #         :or          :condition    :contains_any
         #         :or          :not          :contains_all
-        key_three = (((key_two == :condition) ^ (node.type != :and)) ? :contains_all : :contains_any) if key_three == :contains
+        key_three = (((key_two == :condition) ^ (node.type != :and)) ? :contains_all : :contains_any)
+        unless operator == :contains || operator == key_three
+          result_nodes << child
+          next
+        end
 
         target = child.children.find { |grandchild| grandchild.type == :target }.children.first
         key_one = target.to_s

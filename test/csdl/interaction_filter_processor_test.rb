@@ -256,6 +256,67 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
+  def test_logical_groups_with_semioptimization
+    sexp = s(:logical_group,
+             s(:or,
+               s(:logical_group,
+                 s(:and,
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "instagram.type"),
+                         s(:operator, "=="),
+                         s(:argument,
+                           s(:string, "image"))),
+                       s(:condition,
+                         s(:target, "tumblr.type"),
+                         s(:operator, "!="),
+                         s(:argument,
+                           s(:string, ""))))),
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "a"))),
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "b"))))))),
+               s(:logical_group,
+                 s(:and,
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "instagram.type"),
+                         s(:operator, "=="),
+                         s(:argument,
+                           s(:string, "image"))),
+                       s(:condition,
+                         s(:target, "tumblr.type"),
+                         s(:operator, "!="),
+                         s(:argument,
+                           s(:string, ""))))),
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "c"))),
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "d")))))))))
+    expected = "(((instagram.type == \"image\" OR tumblr.type != \"\") AND interaction.content contains_any \"a,b\") OR "\
+               "((instagram.type == \"image\" OR tumblr.type != \"\") AND interaction.content contains_any \"c,d\"))"
+    actual = CSDL::InteractionFilterProcessor.new(true, true).process(sexp)
+    assert_equal(expected, actual)
+  end
+
   private
 
   def assert_csdl_equal(expected, sexp, optimize = false)

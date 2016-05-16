@@ -198,6 +198,17 @@ module CSDL
       "." + process_all(child_tag_namespaces).join(".")
     end
 
+    # Optimizes logical_group if it is a root node (hack)
+    #
+    # @param node [AST::Node] The :logical_group node to be processed.
+    #
+    # @return [String] The processed :logical_group node.
+    #
+    def on_logical_group(node)
+      optimized = @optimize_conditions ? ::CSDL::Optimizer.new(@skip_espresso).optimize(node) : node
+      "(#{process(optimized.children.first)})"
+    end
+
     # Raises an {InvalidInteractionTargetError} if the target isn't a valid CSDL target for interaction filters. Will
     # be called from the base class when given a :condition node with a :target node.
     #
