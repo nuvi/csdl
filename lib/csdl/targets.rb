@@ -86,6 +86,7 @@ module CSDL
     [ "links.url"                         , true  , true  , true  , :UNBOUNDED ] ,
     [ "reddit.author.name"                , true  , true  , true  , :UNBOUNDED ] ,
     [ "reddit.type"                       , true  , true  , true  , :UNBOUNDED ] ,
+    [ "tumblr.activity"                   , true  , true  , true  , :UNBOUNDED ] ,
     [ "tumblr.blog_name"                  , true  , true  , true  , :UNBOUNDED ] ,
     [ "tumblr.type"                       , true  , true  , true  , :UNBOUNDED ]
 
