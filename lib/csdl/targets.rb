@@ -72,6 +72,7 @@ module CSDL
     [ "instagram.type"                    , true  , true  , true  , :INTERACTION_TYPES ] ,
     [ "interaction.author.username"       , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.content"               , true  , false , true  , :UNBOUNDED ] ,
+    [ "interaction.geo"                   , true  , false , true  , :UNBOUNDED ] ,
     [ "interaction.hashtags"              , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.mentions"              , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.media_type"            , true  , true  , true  , :MEDIA_TYPES ] ,
