@@ -81,6 +81,7 @@ module CSDL
     [ "interaction.subtype"               , true  , true  , true  , :INTERACTION_TYPES ] ,
     [ "interaction.tags"                  , false , true  , false , :UNBOUNDED ] ,
     [ "interaction.tag_tree"              , false , true  , true  , :UNBOUNDED ] ,
+    [ "language.tag"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.code"                        , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.domain"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.normalized_url"              , true  , true  , true  , :UNBOUNDED ] ,
