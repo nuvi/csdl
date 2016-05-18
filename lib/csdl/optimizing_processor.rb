@@ -167,6 +167,7 @@ module CSDL
         mapping[key_one][key_two] ||= {}
         mapping[key_one][key_two][key_three] ||= []
         argument = child.children.find { |grandchild| grandchild.type == :argument }.children.first.children.first
+        argument.gsub!(/(?<!\\),/, "\\,") if operator == :contains
         mapping[key_one][key_two][key_three] << argument
       end
       mapping.each_pair do |target_string, target_mapping|
@@ -175,11 +176,13 @@ module CSDL
             words_string = words.join(",")
             words = words_string.split(/(?<!\\),/).sort.uniq
             result_operator = words.count == 1 ? :contains : words_operator
+            result_string = words.join(",")
+            result_string.gsub!("\\,", ",") if result_operator == :contains
             result_nodes << AST::Node.new(condition_type,
                               [
                                 AST::Node.new(:target, [target_string]),
                                 AST::Node.new(:operator, [result_operator]),
-                                AST::Node.new(:argument, [AST::Node.new(:string, [words.join(",")])])
+                                AST::Node.new(:argument, [AST::Node.new(:string, [result_string])])
                               ])
           end
         end

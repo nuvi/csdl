@@ -97,6 +97,27 @@ class OptimizingProcessorTest < ::MiniTest::Test
     assert_equal(expected, actual)
   end
 
+  def test_converts_multiple_ored_contains_into_contains_any_escaping_quotes
+    sexp = s(:or,
+             s(:condition,
+               s(:target, "fb.content"),
+               s(:operator, :contains),
+               s(:argument,
+                 s(:string, "hello, world"))),
+             s(:condition,
+               s(:target, "fb.content"),
+               s(:operator, :contains),
+               s(:argument,
+                 s(:string, "San Francisco, CA"))))
+    expected = s(:condition,
+                 s(:target, "fb.content"),
+                 s(:operator, :contains_any),
+                 s(:argument,
+                   s(:string, "San Francisco\\, CA,hello\\, world")))
+    actual = CSDL::OptimizingProcessor.new.process(sexp)
+    assert_equal(expected, actual)
+  end
+
   def test_converts_multiple_ored_contains_into_contains_any
     sexp = s(:or,
              s(:condition,
@@ -331,6 +352,28 @@ class OptimizingProcessorTest < ::MiniTest::Test
                  s(:operator, :contains_any),
                  s(:argument,
                    s(:string, "apple,book,cat")))
+    actual = CSDL::OptimizingProcessor.new.process(sexp)
+    assert_equal(expected, actual)
+  end
+
+  def test_groups_contains_any_and_contains_with_or_escaping_quotes
+    sexp = s(:logical_group,
+             s(:or,
+               s(:condition,
+                 s(:target, "fb.content"),
+                 s(:operator, :contains_any),
+                 s(:argument,
+                   s(:string, "hello\\, world,book"))),
+               s(:condition,
+                 s(:target, "fb.content"),
+                 s(:operator, :contains),
+                 s(:argument,
+                   s(:string, "San Francisco, CA")))))
+    expected = s(:condition,
+                 s(:target, "fb.content"),
+                 s(:operator, :contains_any),
+                 s(:argument,
+                   s(:string, "San Francisco\\, CA,book,hello\\, world")))
     actual = CSDL::OptimizingProcessor.new.process(sexp)
     assert_equal(expected, actual)
   end
