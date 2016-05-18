@@ -81,6 +81,20 @@ class ProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
+  def test_not_with_logical_group
+    target = ::CSDL::TARGETS.keys.sample
+    operator = ::CSDL::OPERATORS.keys.sample
+    expected = %Q{NOT (#{target} #{operator} "baz")}
+    sexp = s(:not,
+             s(:logical_group,
+               s(:condition,
+                 s(:target, target),
+                 s(:operator, operator),
+                 s(:argument,
+                   s(:string, "baz")))))
+    assert_csdl_equal(expected, sexp)
+  end
+
   def test_operator
     operator = ::CSDL::OPERATORS.keys.sample
     sexp = s(:operator, operator)

@@ -17,6 +17,16 @@ require "csdl/error"
 require "csdl/targets"
 require "csdl/operators"
 require "csdl/builder"
+begin
+  require "csdl/boolean_lexer"
+  require "csdl/boolean_parser"
+rescue LoadError
+  class ::CSDL::BooleanLexer; end
+  class ::CSDL::BooleanParser; end
+end
+require "csdl/optimizing_processor"
+require "csdl/optimizer"
 require "csdl/processor"
+require "csdl/boolean_processor"
 require "csdl/interaction_filter_processor"
 require "csdl/query_filter_processor"

@@ -408,6 +408,45 @@ class BuilderTest < ::MiniTest::Test
     assert_equal(expected, actual)
   end
 
+  def test_not_with_condition
+    expected = s(:not,
+                 s(:target, "foo"),
+                 s(:operator, "bar"))
+
+    actual = ::CSDL::Builder.new._not do
+      condition("foo", "bar")
+    end
+
+    assert_equal(expected, actual)
+  end
+
+  def test_not_with_logical_group
+    expected = s(:not,
+                 s(:logical_group,
+                   s(:and,
+                     s(:condition,
+                       s(:target, "this"),
+                       s(:operator, "is"),
+                       s(:argument,
+                         s(:string, "first"))),
+                     s(:condition,
+                       s(:target, "this"),
+                       s(:operator, "is"),
+                       s(:argument,
+                         s(:string, "second"))))))
+
+    actual = ::CSDL::Builder.new._not do
+      logical_group(:and) do
+        [
+          condition("this", "is", "first"),
+          condition("this", "is", "second")
+        ]
+      end
+    end
+
+    assert_equal(expected, actual)
+  end
+
   def test_not_without_argument
     expected = s(:not,
                  s(:target, "foo"),

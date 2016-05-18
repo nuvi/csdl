@@ -36,6 +36,24 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
+  def test_on_return_with_optimization
+    expected = %q{return {interaction.content contains_all "apple,book"}}
+    sexp = s(:return,
+             s(:statement_scope,
+               s(:and,
+                 s(:condition,
+                   s(:target, "interaction.content"),
+                   s(:operator, "contains"),
+                   s(:argument,
+                     s(:string, "apple"))),
+                 s(:condition,
+                   s(:target, "interaction.content"),
+                   s(:operator, "contains"),
+                   s(:argument,
+                     s(:string, "book"))))))
+    assert_csdl_equal(expected, sexp, true)
+  end
+
   def test_root_with_tags_and_return_statement
     expected = 'tag.movies "Video" {links.url any "youtube.com,vimeo.com"} tag.movies "Social Networks" {links.url any "twitter.com,facebook.com"} return {fb.topics.category in "Movie,Film,TV" OR fb.parent.topics.category in "Movie,Film,TV"}'
     sexp = s(:root,
@@ -78,10 +96,80 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
+  def test_root_with_tags_and_return_statement_with_optimization
+    expected = 'tag.movies "Video" {links.url contains_any "vimeo.com,youtube.com"} tag.movies "Social Networks" {links.url contains_all "facebook.com,twitter.com"} return {fb.parent.topics.category in "Movie,Film,TV" OR fb.topics.category contains_any "Film,Movie,TV"}'
+    sexp = s(:root,
+                 s(:tag,
+                   s(:tag_namespaces,
+                     s(:tag_namespace, "movies")),
+                   s(:tag_class,
+                     s(:string, "Video")),
+                   s(:statement_scope,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "links.url"),
+                         s(:operator, :contains),
+                         s(:argument,
+                           s(:string, "youtube.com"))),
+                       s(:condition,
+                         s(:target, "links.url"),
+                         s(:operator, :contains),
+                         s(:argument,
+                           s(:string, "vimeo.com")))))),
+                 s(:tag,
+                   s(:tag_namespaces,
+                     s(:tag_namespace, "movies")),
+                   s(:tag_class,
+                     s(:string, "Social Networks")),
+                   s(:statement_scope,
+                     s(:and,
+                       s(:condition,
+                         s(:target, "links.url"),
+                         s(:operator, :contains),
+                         s(:argument,
+                           s(:string, "twitter.com"))),
+                       s(:condition,
+                         s(:target, "links.url"),
+                         s(:operator, :contains),
+                         s(:argument,
+                           s(:string, "facebook.com")))))),
+                 s(:return,
+                   s(:statement_scope,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "fb.topics.category"),
+                         s(:operator, :contains),
+                         s(:argument,
+                           s(:string, "Movie"))),
+                       s(:condition,
+                         s(:target, "fb.topics.category"),
+                         s(:operator, :contains),
+                         s(:argument,
+                           s(:string, "Film"))),
+                       s(:condition,
+                         s(:target, "fb.topics.category"),
+                         s(:operator, :contains),
+                         s(:argument,
+                           s(:string, "TV"))),
+                       s(:condition,
+                         s(:target, "fb.parent.topics.category"),
+                         s(:operator, :in),
+                         s(:argument,
+                           s(:string, "Movie,Film,TV")))))))
+
+    assert_csdl_equal(expected, sexp, true)
+  end
+
   def test_empty_on_statement_scope
     expected = "{}"
     sexp = s(:statement_scope)
     assert_csdl_equal(expected, sexp)
+  end
+
+  def test_empty_on_statement_scope_with_optimization
+    expected = "{}"
+    sexp = s(:statement_scope)
+    assert_csdl_equal(expected, sexp, true)
   end
 
   def test_on_statement_scope_with_condition
@@ -168,10 +256,71 @@ class InteractionFilterProcessorTest < ::MiniTest::Test
     assert_csdl_equal(expected, sexp)
   end
 
+  def test_logical_groups_with_semioptimization
+    sexp = s(:logical_group,
+             s(:or,
+               s(:logical_group,
+                 s(:and,
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "instagram.type"),
+                         s(:operator, "=="),
+                         s(:argument,
+                           s(:string, "image"))),
+                       s(:condition,
+                         s(:target, "tumblr.type"),
+                         s(:operator, "!="),
+                         s(:argument,
+                           s(:string, ""))))),
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "a"))),
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "b"))))))),
+               s(:logical_group,
+                 s(:and,
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "instagram.type"),
+                         s(:operator, "=="),
+                         s(:argument,
+                           s(:string, "image"))),
+                       s(:condition,
+                         s(:target, "tumblr.type"),
+                         s(:operator, "!="),
+                         s(:argument,
+                           s(:string, ""))))),
+                   s(:logical_group,
+                     s(:or,
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "c"))),
+                       s(:condition,
+                         s(:target, "interaction.content"),
+                         s(:operator, "contains"),
+                         s(:argument,
+                           s(:string, "d")))))))))
+    expected = "(((instagram.type == \"image\" OR tumblr.type != \"\") AND interaction.content contains_any \"a,b\") OR "\
+               "((instagram.type == \"image\" OR tumblr.type != \"\") AND interaction.content contains_any \"c,d\"))"
+    actual = CSDL::InteractionFilterProcessor.new(true, true).process(sexp)
+    assert_equal(expected, actual)
+  end
+
   private
 
-  def assert_csdl_equal(expected, sexp)
-    assert_equal(expected, ::CSDL::InteractionFilterProcessor.new.process(sexp))
+  def assert_csdl_equal(expected, sexp, optimize = false)
+    assert_equal(expected, ::CSDL::InteractionFilterProcessor.new(optimize).process(sexp))
   end
 
 end

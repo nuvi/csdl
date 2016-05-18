@@ -1,6 +1,8 @@
 module CSDL
   class Error                            < ::StandardError; end
 
+  class FalseExpressionError             < Error; end
+  class InvalidChildNodeError            < Error; end
   class InvalidInteractionTargetError    < Error; end
   class InvalidQueryTargetError          < Error; end
   class MissingChildNodesError           < Error; end

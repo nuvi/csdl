@@ -64,17 +64,40 @@ module CSDL
     #   end
     #   CSDL::Processor.new.process(nodes) # => 'NOT fb.content contains "this is a string" AND NOT fb.parent.content contains "this is a string"'
     #
+    # @example Negating logical groupings
+    #   node = ::CSDL::Builder.new._not do
+    #     logical_group(:and) do
+    #       [
+    #         condition("fb.content", :contains, "this is a string"),
+    #         condition("fb.parent.content", :contains, "this is a string")
+    #       ]
+    #     end
+    #   end
+    #   CSDL::Processor.new.process(nodes) # => 'NOT (fb.content contains "this is a string" AND fb.parent.content contains "this is a string")'
+    #
     # @param target [#to_s] A valid Target specifier (see {CSDL::TARGETS}).
     # @param operator [#to_s] A valid Operator specifier (see {CSDL::OPERATORS}).
     # @param argument [String, Numeric, nil] The comparator value, if applicable for the given operator.
+    # @param block [Proc] Block to return child nodes to apply to this :not node. Block is evaluated against the builder instance. Only the first child node will be used.
     #
     # @return [AST::Node] An AST :not node with child target, operator, and argument nodes.
     #
     # @see #condition
     #
-    def _not(target, operator, argument = nil)
-      node = condition(target, operator, argument)
-      node.updated(:not)
+    def _not(target = nil, operator = nil, argument = nil, &block)
+      unless target || operator || argument
+        children = __one_or_more_child_nodes(&block)
+        if children.first
+          if children.first.type == :condition
+            children.first.updated(:not)
+          else
+            s(:not, children.first)
+          end
+        end
+      else
+        node = condition(target, operator, argument)
+        node.updated(:not)
+      end
     end
 
     # Logically OR two or more child nodes together. Does not implicitly create a logical group with parentheses.

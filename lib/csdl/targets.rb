@@ -68,18 +68,29 @@ module CSDL
     [ "fb.topics.website"                 , true  , false , false , :UNBOUNDED ] ,
     [ "fb.topic_ids"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "fb.type"                           , true  , true  , true  , :INTERACTION_TYPES ] ,
+    [ "instagram.from.username"           , true  , true  , true  , :UNBOUNDED ] ,
+    [ "instagram.type"                    , true  , true  , true  , :INTERACTION_TYPES ] ,
+    [ "interaction.author.username"       , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.content"               , true  , false , true  , :UNBOUNDED ] ,
+    [ "interaction.geo"                   , true  , false , true  , :UNBOUNDED ] ,
     [ "interaction.hashtags"              , true  , true  , true  , :UNBOUNDED ] ,
+    [ "interaction.mentions"              , true  , true  , true  , :UNBOUNDED ] ,
     [ "interaction.media_type"            , true  , true  , true  , :MEDIA_TYPES ] ,
     [ "interaction.ml.categories"         , false , true  , true  , :UNBOUNDED ] ,
     [ "interaction.raw_content"           , true  , false , true  , :UNBOUNDED ] ,
     [ "interaction.subtype"               , true  , true  , true  , :INTERACTION_TYPES ] ,
     [ "interaction.tags"                  , false , true  , false , :UNBOUNDED ] ,
     [ "interaction.tag_tree"              , false , true  , true  , :UNBOUNDED ] ,
+    [ "language.tag"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.code"                        , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.domain"                      , true  , true  , true  , :UNBOUNDED ] ,
     [ "links.normalized_url"              , true  , true  , true  , :UNBOUNDED ] ,
-    [ "links.url"                         , true  , true  , true  , :UNBOUNDED ]
+    [ "links.url"                         , true  , true  , true  , :UNBOUNDED ] ,
+    [ "reddit.author.name"                , true  , true  , true  , :UNBOUNDED ] ,
+    [ "reddit.type"                       , true  , true  , true  , :UNBOUNDED ] ,
+    [ "tumblr.activity"                   , true  , true  , true  , :UNBOUNDED ] ,
+    [ "tumblr.blog_name"                  , true  , true  , true  , :UNBOUNDED ] ,
+    [ "tumblr.type"                       , true  , true  , true  , :UNBOUNDED ]
 
   ]
 

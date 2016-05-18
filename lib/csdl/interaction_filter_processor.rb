@@ -34,6 +34,18 @@ module CSDL
   # @see http://dev.datasift.com/docs/csdl DataSift CSDL Language Documentation
   #
   class InteractionFilterProcessor < ::CSDL::Processor
+    # Instance contructor
+    #
+    # @param optimize_conditions [Boolean] Pass 'true' to enable CSDL optimimization
+    # @param skip_espresso       [Boolean] Pass 'true' to skip optimization by espresso algorithm
+    #
+    # @see Optimizer#optimize
+    #
+    def initialize(optimize_conditions = false, skip_espresso = false)
+      super()
+      @optimize_conditions = optimize_conditions
+      @skip_espresso = skip_espresso
+    end
 
     # Generate a return statement by processing the child statement_scope node.
     #
@@ -56,6 +68,7 @@ module CSDL
         fail ::CSDL::MissingReturnStatementScopeError, "Invalid CSDL AST: return statment scope is missing"
       end
 
+      statement_scope = optimize_statement_scope(statement_scope)
       "return #{process(statement_scope)}"
     end
 
@@ -125,6 +138,13 @@ module CSDL
         tag_namespace += process(tag_namespaces)
       end
 
+      begin
+        statement_scope = optimize_statement_scope(statement_scope)
+      rescue ::CSDL::FalseExpressionError
+        # Remove the tag if condition is FALSE
+        return ""
+      end
+
       children = [tag_namespace] + process_all([ tag_class, statement_scope ])
       children.join(" ")
     end
@@ -178,6 +198,17 @@ module CSDL
       "." + process_all(child_tag_namespaces).join(".")
     end
 
+    # Optimizes logical_group if it is a root node (hack)
+    #
+    # @param node [AST::Node] The :logical_group node to be processed.
+    #
+    # @return [String] The processed :logical_group node.
+    #
+    def on_logical_group(node)
+      optimized = @optimize_conditions ? ::CSDL::Optimizer.new(@skip_espresso).optimize(node) : node
+      "(#{process(optimized.children.first)})"
+    end
+
     # Raises an {InvalidInteractionTargetError} if the target isn't a valid CSDL target for interaction filters. Will
     # be called from the base class when given a :condition node with a :target node.
     #
@@ -199,5 +230,9 @@ module CSDL
       end
     end
 
+    def optimize_statement_scope(statement_scope)
+      return statement_scope unless @optimize_conditions
+      AST::Node.new(:statement_scope, [::CSDL::Optimizer.new(@skip_espresso).optimize(statement_scope.children.first)])
+    end
   end
 end
